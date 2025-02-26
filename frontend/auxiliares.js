@@ -1,1 +1,0 @@
-//funções auxiliares (ex: checagem de posição do navio)

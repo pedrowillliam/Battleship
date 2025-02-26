@@ -4,8 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Batalha Naval</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+    <h1>Batalha Naval</h1>
+
+    <div class="container">
+        <!-- Tabuleiro do Jogador -->
+        <div class="board-container">
+            <h2>Seu Tabuleiro</h2>
+            <div id="player-board" class="board"></div>
+        </div>
+
+        <!-- Tabuleiro da IA -->
+        <div class="board-container">
+            <h2>Tabuleiro do Inimigo</h2>
+            <div id="ai-board" class="board"></div>
+        </div>
+    </div>
+
+    <!-- Botão para reiniciar o jogo -->
+    <button id="restart-btn">Reiniciar Jogo</button>
+
+    <script src="script.js"></script>
 </body>
 </html>
