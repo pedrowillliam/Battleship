@@ -1,0 +1,131 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background-color: #4e8fda; /* fundo azul*/
+    display: flex;
+    align-items: center;     /* centraliza verticalmente */
+    justify-content: flex-start; /* alinha à esquerda */
+}
+
+.regras-container {
+    width: auto;
+    height: auto;
+    top: auto;
+    left: 130px;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 16px;
+    padding: 33px 32px 32px 32px;
+    gap: 21px;
+    border-top: 2px solid black;
+    border-left: 2px solid black;
+    border-right: 5px solid black;  /* mais grosso à direita */
+    border-bottom: 5px solid black; /* mais grosso embaixo */
+    position: relative;
+    
+}
+
+.regras-titulo {
+    position: absolute;
+    background-color: #ffc700;
+    color: black;
+    top: -24px;
+    left: 32px;
+    padding: 8px 16px;
+    border: 2px solid black;
+    border-right: 4px solid black;
+    border-bottom: 4px solid black;
+    border-radius: 999px;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
+
+.regras-descricao {
+    width: 501px;
+    height: 48px;
+    font-weight: 500;
+    size: 16px;
+    line-height: 24px;
+    letter-spacing: 0%;
+    vertical-align: middle;
+}
+
+.regras-navios {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 21px;
+}
+
+.regras-navio {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 14px;
+    color: #222;
+}
+
+.regras-navio .numero {
+    background-color: #ffc700;
+    font-weight: 700;
+    size: 14px;
+    line-height: 24px;
+    letter-spacing: 0%;
+    border-radius: 50%;
+    border: 2px solid black;
+    border-right: 3px solid black;
+    border-bottom: 3px solid black;
+    border-radius: 99px;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.regras-navio span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    size: 18px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    vertical-align: middle;
+}
+
+.icones {
+    display: flex;
+    gap: 4px;
+    margin-top: 6px;
+  }
+  
+  .bloco {
+    width: 24px;
+    height: 24px;
+    background-color: black;
+    border: 2px solid white;
+  }
+  
+  .frente {
+    border-radius: 12px 0 0 12px;
+  }
+  
+  .meio {
+    border-radius: 0;
+  }
+  
+  .traseira {
+    border-radius: 0 12px 12px 0;
+  }
+  
+  .unico {
+    width: 24px;
+    height: 32px;
+    top: 90px;
+    left: 29px;
+    border-radius: 20px;
+    transform: rotate(90deg);
+  }
+  
