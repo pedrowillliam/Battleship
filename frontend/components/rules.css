@@ -6,6 +6,7 @@ body {
     display: flex;
     align-items: center;     /* centraliza verticalmente */
     justify-content: flex-start; /* alinha à esquerda */
+    font-family: Inter, sans-serif;
 }
 
 .regras-container {
