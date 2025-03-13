@@ -1,35 +1,71 @@
 const express = require("express");
 const cors = require("cors");
 const { Pool } = require("pg");
-const config = require("./config.js"); // Importar o arquivo de configuração
+const bcrypt = require("bcryptjs");
+const config = require("./config.js");
 
-// Configuração do banco de dados usando as credenciais do config.js
 const pool = new Pool(config.db);
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Rota principal
-app.get("/", (req, res) => {
-    res.send("Servidor do Batalha Naval está rodando! ⚓🚢");
+// Rota de Registro
+app.post("/register", async (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).json({ message: "Usuário e senha são obrigatórios!" });
+    }
+
+    try {
+        // Verifica se o usuário já existe
+        const userExists = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
+        if (userExists.rows.length > 0) {
+            return res.status(400).json({ message: "Usuário já existe" });
+        }
+
+        // Criptografa a senha antes de salvar no banco
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const result = await pool.query(
+            "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, username",
+            [username, hashedPassword]
+        );
+
+        res.status(201).json({ message: "Usuário registrado com sucesso!", user: result.rows[0] });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Erro ao registrar usuário!", error: error.message });
+    }
 });
 
-// Rota para testar a conexão com o banco de dados
-app.get("/test-db", async (req, res) => {
+// Rota de Login
+app.post("/login", async (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).json({ message: "Usuário e senha são obrigatórios!" });
+    }
+
     try {
-        const client = await pool.connect();
-        const result = await client.query("SELECT NOW();");
-        client.release();
-        res.send({
-            message: "Conexão com o banco de dados bem-sucedida!",
-            data: result.rows[0],
-        });
-    } catch (err) {
-        res.status(500).send({
-            message: "Erro ao conectar ao banco de dados",
-            error: err.message,
-        });
+        // Verifica se o usuário existe
+        const result = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
+
+        if (result.rows.length === 0) {
+            return res.status(400).json({ message: "Usuário não encontrado!" });
+        }
+
+        const user = result.rows[0];
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(401).json({ message: "Senha incorreta!" });
+        }
+
+        res.status(200).json({ message: "Login bem-sucedido!", user: { id: user.id, username: user.username } });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Erro ao fazer login!", error: error.message });
     }
 });
 
@@ -38,7 +74,6 @@ app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
 
-// Testar a conexão com o banco de dados ao iniciar o servidor
 pool.connect()
     .then(() => console.log("Banco de dados conectado com sucesso!"))
     .catch(err => console.error("Erro ao conectar no banco de dados:", err));
