@@ -1,0 +1,177 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background-color: #4e8fda; /* fundo azul*/
+    display: flex;
+    align-items: center;     /* centraliza verticalmente */
+    justify-content: flex-start; /* alinha à esquerda */
+    font-family: Inter, sans-serif;
+}
+
+.regras-container {
+    width: auto;
+    height: auto;
+    top: auto;
+    left: 130px;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 16px;
+    padding: 33px 32px 32px 32px;
+    gap: 21px;
+    border-top: 2px solid black;
+    border-left: 2px solid black;
+    border-right: 5px solid black;  /* mais grosso à direita */
+    border-bottom: 5px solid black; /* mais grosso embaixo */
+    position: relative;
+    
+}
+
+.regras-titulo {
+    position: absolute;
+    background-color: #ffc700;
+    color: black;
+    top: -24px;
+    left: 32px;
+    padding: 8px 16px;
+    border: 2px solid black;
+    border-right: 4px solid black;
+    border-bottom: 4px solid black;
+    border-radius: 999px;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
+
+.regras-descricao {
+    width: 501px;
+    height: 48px;
+    font-weight: 500;
+    size: 16px;
+    line-height: 24px;
+    letter-spacing: 0%;
+    vertical-align: middle;
+}
+
+.regras-navios {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 21px;
+}
+
+.regras-navio {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 14px;
+    color: #222;
+}
+
+.regras-navio .numero {
+    background-color: #ffc700;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 24px;
+    letter-spacing: 0;
+    border: 1px solid black;
+    border-right: 3px solid black;
+    border-bottom: 3px solid black;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.regras-navio span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    size: 18px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    vertical-align: middle;
+}
+
+.icones {
+    display: flex;
+    gap: 4px;
+    margin-top: 6px;
+  }
+  
+  .bloco {
+    width: 24px;
+    height: 24px;
+    background-color: white;
+    border: 1.5px solid black;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.288);
+    border-right: 3px solid black;
+    border-bottom: 3px solid black;
+}
+  
+.frente {
+    border-radius: 8px;
+    position: relative;
+    background-color: white;
+}
+.frente::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 90%;
+    height: 15px;
+    border-radius: 8px 0 0 8px;
+    background-color: black;
+    transform: translateY(-50%);
+}
+.meio {
+    border-radius: 8px;
+    position: relative;
+    background-color: white;
+}
+.meio::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 15px;
+    background-color: black;
+    transform: translateY(-50%);
+}
+.traseira {
+    border-radius: 8px;
+    position: relative;
+    border-radius: 8px;
+    background-color: white;
+}
+.traseira::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 90%;
+    height: 15px;
+    border-radius: 0 8px 8px 0px;
+    background-color: black;
+    transform: translateY(-50%);
+}
+.unico {
+    border-radius: 8px;
+    position: relative;
+}
+.unico::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    width: 80%;
+    height: 15px;
+    background-color: black;
+    transform: translateY(-50%);
+    border-radius: 8px;
+}

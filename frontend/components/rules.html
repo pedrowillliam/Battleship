@@ -1,0 +1,62 @@
+<!-- Para o componente regras, como ele aparecerá em Login,Registro e Ranking como mostra as telas do figma
+adicionei um novo arquivo rules.html na pasta /components, assim ele pode ser reutilizado sem repetir código.
+-->
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regras do Jogo</title>
+    <link rel="stylesheet" href="../components/rules.css">
+</head>
+<body>
+    <div class="regras-container">
+        <div class="regras-titulo">Regras</div>
+        <p class="regras-descricao">
+        Estes são os navios que você deve colocar no seu tabuleiro.<br>
+        Afunde os navios dos oponentes antes que ele afunde os seus.
+        </p>
+       
+        <div class="regras-navios">
+            <div class="regras-navio">
+                <span class="numero">1</span>
+                <span>Navio Porta-Aviões</span>
+                <div class="icones">
+                    <div class="bloco frente"></div>
+                    <div class="bloco meio"></div>
+                    <div class="bloco meio"></div>
+                    <div class="bloco meio"></div>
+                    <div class="bloco meio"></div>
+                    <div class="bloco traseira"></div>
+                </div>
+            </div>
+            <div class="regras-navio">
+                <span class="numero">1</span>
+                <span>Navio de Guerra</span>
+                <div class="icones">
+                    <div class="bloco frente"></div>
+                    <div class="bloco meio"></div>
+                    <div class="bloco meio"></div>
+                    <div class="bloco traseira"></div>
+                </div>
+            </div>
+            <div class="regras-navio">
+                <span class="numero">2</span>
+                <span>Navio Encouraçado</span>
+                <div class="icones">
+                    <div class="bloco frente"></div>
+                    <div class="bloco meio"></div>
+                    <div class="bloco traseira"></div>
+                </div>
+            </div>
+            <div class="regras-navio">
+                <span class="numero">1</span>
+                <span>Submarino</span>
+                <div class="icones">
+                    <div class="bloco unico"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
