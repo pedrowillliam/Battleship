@@ -1,0 +1,134 @@
+@import url("https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap");
+
+body {
+  display: flex;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: "Inria Sans", sans-serif;
+}
+
+/*estilização do componente rules*/
+.regras {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+}
+
+.iframe-regras {
+  width: 550px;
+  height: 360px;
+  border: none;
+}
+
+.container {
+  display: flex;
+  width: 100%;
+}
+
+.left,
+.right {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.left {
+  background-color: #4e8fda;
+  color: white;
+}
+
+.titulo-batalha {
+  font-family: "Inria Sans", sans-serif;
+  color: #000000;
+  font-weight: 700;
+  font-size: 96px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-align: center;
+  vertical-align: middle;
+  margin: 0;
+}
+
+.subtitulo {
+  font-weight: 500;
+  color: #000000;
+  font-style: italic;
+  font-size: 24px;
+  line-height: 40px;
+  letter-spacing: 0%;
+  text-align: center;
+  vertical-align: middle;
+  
+}
+
+.ranking-btn {
+  background-color: #ffc700;
+  color: black;
+  border-radius: 999px;
+  padding: 12px 24px;
+  cursor: pointer;
+  font-weight: bold;
+  border: 2px solid #000000;
+  box-shadow: 2px 2px 0px 0px #000000;
+}
+
+.right {
+  background-color: #ffffff;
+}
+
+.login-titulo {
+  font-weight: 700;
+  font-size: 64px;
+  text-align: center;
+  margin: 0;
+  margin-bottom: 1rem;
+}
+
+.registro-texto {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0%;
+  text-align: center;
+  vertical-align: middle;
+  margin-bottom: 1.5rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-form input {
+  width: 582px;
+  height: 71px;
+  border: 2px solid black;
+  border-radius: 8px;
+  padding-left: 16px;
+  font-size: 18px;
+  box-shadow: 2px 2px 0px 0px #000000;
+  margin-bottom: 2rem;
+}
+
+.jogar-ou-registra-btn {
+  background-color: #f16858;
+  width: 314px;
+  height: 60px;
+  border-radius: 999px;
+  color: black;
+  font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  margin-top: 10rem;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #000000;
+  box-shadow: 2px 2px 0px 0px #000000;
+}
