@@ -2,7 +2,7 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
-    background-color: #4e8fda; /* fundo azul*/
+    background-color: #66a3ff; /* fundo azul*/
     display: flex;
     align-items: center;     /* centraliza verticalmente */
     justify-content: flex-start; /* alinha à esquerda */
