@@ -1,378 +1,184 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Game Board Grid</title>
-    <link rel="stylesheet" href="../components/board.css" />
-  </head>
-  <body>
-    <div class="board-container">
-      <div class="board">
-        <div class="row">
-          <p style="padding-top: 15px">A</p>
-          <div class="row-cells">
-            <div class="first-row">
-              <p>1</p>
-              <div class="cell"></div>
-            </div>
-            <div class="first-row">
-              <p>2</p>
-              <div class="cell"></div>
-            </div>
-            <div class="first-row">
-              <p>3</p>
-              <div class="cell"></div>
-            </div>
-            <div class="first-row">
-              <p>4</p>
-              <div class="cell"></div>
-            </div>
-            <div class="first-row">
-              <p>5</p>
-              <div class="cell"></div>
-            </div>
-            <div class="first-row">
-              <p>6</p>
-              <div class="cell"></div>
-            </div>
-            <div class="first-row">
-              <p>7</p>
-              <div class="cell"></div>
-            </div>
-            <div class="first-row">
-              <p>8</p>
-              <div class="cell"></div>
-            </div>
-            <div class="first-row">
-              <p>9</p>
-              <div class="cell"></div>
-            </div>
-            <div class="first-row">
-              <p>10</p>
-              <div class="cell"></div>
-            </div>
-          </div>
+<div class="board-container">
+  <div class="board">
+    <div class="row">
+      <p style="padding-top: 15px">A</p>
+      <div class="row-cells">
+        <div class="first-row">
+          <p>1</p>
+          <div class="cell"></div>
         </div>
-        <div class="row">
-          <p>B</p>
-          <div style="display: flex; gap: 4px">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-          </div>
+        <div class="first-row">
+          <p>2</p>
+          <div class="cell"></div>
         </div>
-        <div class="row">
-          <p>C</p>
-          <div style="display: flex; gap: 4px">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-          </div>
+        <div class="first-row">
+          <p>3</p>
+          <div class="cell"></div>
         </div>
-        <div class="row">
-          <p>D</p>
-          <div style="display: flex; gap: 4px">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell hit"></div>
-            <div class="cell hit"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-          </div>
+        <div class="first-row">
+          <p>4</p>
+          <div class="cell"></div>
         </div>
-        <div class="row">
-          <p>E</p>
-          <div style="display: flex; gap: 4px">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-          </div>
+        <div class="first-row">
+          <p>5</p>
+          <div class="cell"></div>
         </div>
-        <div class="row">
-          <p>F</p>
-          <div style="display: flex; gap: 4px">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-          </div>
+        <div class="first-row">
+          <p>6</p>
+          <div class="cell"></div>
         </div>
-        <div class="row">
-          <p>G</p>
-          <div style="display: flex; gap: 4px">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-          </div>
+        <div class="first-row">
+          <p>7</p>
+          <div class="cell"></div>
         </div>
-        <div class="row">
-          <p>H</p>
-          <div style="display: flex; gap: 4px">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-          </div>
+        <div class="first-row">
+          <p>8</p>
+          <div class="cell"></div>
         </div>
-        <div class="row">
-          <p>I</p>
-          <div style="display: flex; gap: 4px">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-          </div>
+        <div class="first-row">
+          <p>9</p>
+          <div class="cell"></div>
         </div>
-        <div class="row">
-          <p>J</p>
-          <div style="display: flex; gap: 4px">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-          </div>
-        </div>
-      </div>
-      <div class="board">
-        <div class="row">
-          <p style="padding-top: 15px">A</p>
-          <div class="row-cells">
-            <div class="first-row">
-              <p>1</p>
-              <div class="cell"></div>
-            </div>
-            <div class="first-row">
-              <p>2</p>
-              <div class="cell"></div>
-            </div>
-            <div class="first-row">
-              <p>3</p>
-              <div class="cell"></div>
-            </div>
-            <div class="first-row">
-              <p>4</p>
-              <div class="cell"></div>
-            </div>
-            <div class="first-row">
-              <p>5</p>
-              <div class="cell"></div>
-            </div>
-            <div class="first-row">
-              <p>6</p>
-              <div class="cell"></div>
-            </div>
-            <div class="first-row">
-              <p>7</p>
-              <div class="cell"></div>
-            </div>
-            <div class="first-row">
-              <p>8</p>
-              <div class="cell"></div>
-            </div>
-            <div class="first-row">
-              <p>9</p>
-              <div class="cell"></div>
-            </div>
-            <div class="first-row">
-              <p>10</p>
-              <div class="cell"></div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <p>B</p>
-          <div style="display: flex; gap: 4px">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-          </div>
-        </div>
-        <div class="row">
-          <p>C</p>
-          <div style="display: flex; gap: 4px">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-          </div>
-        </div>
-        <div class="row">
-          <p>D</p>
-          <div style="display: flex; gap: 4px">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell hit"></div>
-            <div class="cell hit"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-          </div>
-        </div>
-        <div class="row">
-          <p>E</p>
-          <div style="display: flex; gap: 4px">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-          </div>
-        </div>
-        <div class="row">
-          <p>F</p>
-          <div style="display: flex; gap: 4px">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-          </div>
-        </div>
-        <div class="row">
-          <p>G</p>
-          <div style="display: flex; gap: 4px">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-          </div>
-        </div>
-        <div class="row">
-          <p>H</p>
-          <div style="display: flex; gap: 4px">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-          </div>
-        </div>
-        <div class="row">
-          <p>I</p>
-          <div style="display: flex; gap: 4px">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-          </div>
-        </div>
-        <div class="row">
-          <p>J</p>
-          <div style="display: flex; gap: 4px">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-          </div>
+        <div class="first-row">
+          <p>10</p>
+          <div class="cell"></div>
         </div>
       </div>
     </div>
-    <script src="../script/board.js"></script>
-  </body>
-</html>
+    <div class="row">
+      <p>B</p>
+      <div style="display: flex; gap: 4px">
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+      </div>
+    </div>
+    <div class="row">
+      <p>C</p>
+      <div style="display: flex; gap: 4px">
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+      </div>
+    </div>
+    <div class="row">
+      <p>D</p>
+      <div style="display: flex; gap: 4px">
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell hit"></div>
+        <div class="cell hit"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+      </div>
+    </div>
+    <div class="row">
+      <p>E</p>
+      <div style="display: flex; gap: 4px">
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+      </div>
+    </div>
+    <div class="row">
+      <p>F</p>
+      <div style="display: flex; gap: 4px">
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+      </div>
+    </div>
+    <div class="row">
+      <p>G</p>
+      <div style="display: flex; gap: 4px">
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+      </div>
+    </div>
+    <div class="row">
+      <p>H</p>
+      <div style="display: flex; gap: 4px">
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+      </div>
+    </div>
+    <div class="row">
+      <p>I</p>
+      <div style="display: flex; gap: 4px">
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+      </div>
+    </div>
+    <div class="row">
+      <p>J</p>
+      <div style="display: flex; gap: 4px">
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+      </div>
+    </div>
+  </div>
+</div>

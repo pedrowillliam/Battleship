@@ -1,0 +1,145 @@
+@import url("https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap");
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Inria Sans, sans-serif;
+}
+
+.split-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
+
+.half {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+}
+
+.blue {
+  background-color: #699BF7;
+  width: 50%;
+}
+
+.red {
+  background-color: #FF8577;
+  width: 50%;
+}
+
+.player-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  background-color: #ccc;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.username {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  margin-top: .5rem;
+  font-weight: 500;
+}
+
+.stats {
+  display: flex;
+  width: 100%;
+  margin-top: 24px;
+  place-content: center;
+  gap: 2rem;
+}
+
+.stat {
+  font-size: 12px;
+  color: black;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stat span {
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 24px;
+  letter-spacing: 0;
+  border: 1px solid black;
+  border-right: 3px solid black;
+  border-bottom: 3px solid black;
+  border-radius: 50px;
+  padding: 2px;
+  width: 30px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.bg-white {
+  background-color: white;
+}
+
+.bg-yellow {
+  background-color: #ffc700;
+}
+
+.bg-red {
+  background-color: #F16858;
+}
+
+.controls {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn {
+  margin: 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  background-color: #ffc700;
+  color: black;
+  top: -24px;
+  left: 32px;
+   width: 160px;
+   height: 40px;
+  border: 2px solid black;
+  border-right: 4px solid black;
+  border-bottom: 4px solid black;
+  border-radius: 999px;
+  font-weight: bold;
+  font-family: 'Inria Sans', sans-serif;
+}
+
+.btn.surrender {
+  background-color: #F16858;
+  color: black;
+}
+
+.btn:hover {
+  background-color: orange;
+}
+
+.btn.surrender:hover {
+  background-color: rgb(212, 100, 100);
+}

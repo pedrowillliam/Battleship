@@ -1,2 +1,56 @@
-<!-- pagina inicial do jogo -->
-
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Battleship</title>
+    <link rel="stylesheet" href="../components/board.css" />
+    <link rel="stylesheet" href="../css/game.css" />
+  </head>
+  <body>
+    <main class="split-container">
+      <div class="half blue">
+        <div class="player-info">
+          <img width="120" src="../assets/user-photo.png" alt="avatar" />
+          <p class="username">USERNAME</p>
+        </div>
+        <div id="board-component"></div>
+        <div class="stats">
+          <div class="stat">
+            TIROS <span id="user-shots" class="bg-white">0</span>
+          </div>
+          <div class="stat">
+            ACERTOS <span id="user-hits" class="bg-yellow">0</span>
+          </div>
+          <div class="stat">
+            ERROS <span id="user-misses" class="bg-red">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="half red">
+        <div class="player-info">
+          <img width="140" src="../assets/user-ia.png" alt="avatar" />
+          <div class="username">@robot</div>
+        </div>
+        <div id="board-component-two"></div>
+        <div class="stats">
+          <div class="stat">
+            TIROS <span id="opponent-shots" class="bg-white">0</span>
+          </div>
+          <div class="stat">
+            ACERTOS <span id="opponent-hits" class="bg-yellow">0</span>
+          </div>
+          <div class="stat">
+            ERROS <span id="opponent-misses" class="bg-red">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn restart">REINICIAR</button>
+        <button class="btn surrender" id="surrender-btn">DESISTIR</button>
+      </div>
+    </main>
+    <script src="../script/board.js"></script>
+    <script src="../script/game.js"></script>
+  </body>
+</html>
