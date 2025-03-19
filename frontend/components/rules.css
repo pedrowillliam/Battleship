@@ -1,15 +1,15 @@
-/*
+
 body {
     margin: 0;
     padding: 0;
     height: 100vh;
-    background-color: #4e8fda; 
+    background-color: #66a3ff; 
     display: flex;
     align-items: center;     
     justify-content: flex-start; 
     font-family: Inter, sans-serif;
 }
-*/
+
 
 .regras-container {
     width: auto;
