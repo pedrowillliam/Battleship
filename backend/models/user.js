@@ -5,10 +5,13 @@ pool.on("error", (err, client) => {
   console.error(`Error, ${err}, on idle client ${client}`);
 });
 
+// Criação da tabela users com UUID
 const createTable = async () => {
   const query = `
+    CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
     CREATE TABLE IF NOT EXISTS users (
-      id SERIAL PRIMARY KEY,
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       username VARCHAR(50) UNIQUE NOT NULL,
       password VARCHAR(255) NOT NULL
     );
@@ -21,9 +24,8 @@ const createTable = async () => {
   }
 };
 
-const selectUsers = async (columns, clause) => {
-  let query = `SELECT ${columns} FROM users`;
-  if (clause) query += ` ${clause}`;
+const selectUsers = async (columns = "*", clause = "") => {
+  const query = `SELECT ${columns} FROM users ${clause}`;
   try {
     const result = await pool.query(query);
     return result.rows;
