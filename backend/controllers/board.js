@@ -41,14 +41,14 @@ const resetBoard = (req, res) => {
 };
 
 const addShip = (req, res) => {
-    const { tipo, x, y, direcao } = req.body;
+    const { type, row, column, direction } = req.body;
     
-    if (!tipo || x === undefined || y === undefined || !direcao) {
-        return res.status(400).json({ message: "Todos os campos (tipo, x, y, direcao) são obrigatórios!" });
+    if (!type ||row === undefined || column === undefined || !direction) {
+        return res.status(400).json({ message: "Todos os campos (type, row, column, direction) são obrigatórios!" });
     }
 
     try {
-        board.addShip({ tipo, x, y, direcao });
+        board.addShip({ type, row, column, direction });
         
         // Resposta de sucesso ao adicionar o navio
         res.status(201).json({

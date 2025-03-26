@@ -5,79 +5,79 @@ class Board {
         this.ships = [];
         
         this.shipConfigs = {
-            'porta-avioes': { length: 6, limite: 1 },
-            'navio-de-guerra': { length: 4, limite: 1 },
-            'encouracado': { length: 3, limite: 2 },
-            'submarino': { length: 1, limite: 1 }
+            'porta-avioes': { length: 6, limit: 1 },
+            'navio-de-guerra': { length: 4, limit: 1 },
+            'encouracado': { length: 3, limit: 2 },
+            'submarino': { length: 1, limit: 1 }
         };
     }
 
     // verifica se é possível posicionar o navio
-    isValidPosition(x, y, length, direcao) {
-        if (direcao !== 'horizontal' && direcao !== 'vertical') {
+    isValidPosition(row, column, length, direction) {
+        if (direction !== 'horizontal' && direction !== 'vertical') {
             throw new Error('Direção inválida. Use "horizontal" ou "vertical".');
         }
 
-        if (direcao === 'horizontal') {
-            if (y + length > 10) return false;
+        if (direction === 'horizontal') {
+            if (column + length > 10) return false;
             for (let i = 0; i < length; i++) {
-                if (this.grid[x][y + i] !== null) return false;
+                if (this.grid[row][column + i] !== null) return false;
             }
         } else {
-            if (x + length > 10) return false;
+            if (row + length > 10) return false;    
             for (let i = 0; i < length; i++) {
-                if (this.grid[x + i][y] !== null) return false;
+                if (this.grid[row + i][column] !== null) return false;
             }
         }
 
         return true;
     }
 
-    validateShipLimit(tipo) {
-        const config = this.shipConfigs[tipo];
+    validateShipLimit(type) {
+        const config = this.shipConfigs[type];
         if (!config) throw new Error('Tipo de navio inválido.');
 
-        const naviosUsados = this.ships.filter(s => s.tipo === tipo).length;
-        if (naviosUsados >= config.limite) {
-            throw new Error(`Limite de ${tipo} atingido.`);
+        const naviosUsados = this.ships.filter(s => s.type === type).length;
+        if (naviosUsados >= config.limit) {
+            throw new Error(`Limite de ${type} atingido.`);
         }
     }
 
-    getShipLength(tipo) {
-        const config = this.shipConfigs[tipo];
+    getShipLength(type) {
+        const config = this.shipConfigs[type];
         if (!config) throw new Error('Tipo de navio inválido.');
         return config.length;
     }
 
     //adicionar navio no tabuleiro
-    addShip({ tipo, x, y, direcao }) {
-        const tipoLower = tipo.toLowerCase();
+    addShip({ type, row, column, direction }) {
+        const typeLower = type.toLowerCase();
         
-        this.validateShipLimit(tipoLower)
-        const length = this.getShipLength(tipoLower);
+        this.validateShipLimit(typeLower)
+        const length = this.getShipLength(typeLower);
 
-        if (!this.isValidPosition(x, y, length, direcao)) {
+        if (!this.isValidPosition(row, column, length, direction)) {
             throw new Error('Posição inválida para o navio.');
         }
 
         const ship = {
-            tipo: tipoLower,
-            posicoes: []
+            type: typeLower,
+            positions: []
         };
 
         for (let i = 0; i < length; i++) {
-            let posX, posY;
+            let rowIndex, colIndex;
 
-            if (direcao === 'horizontal') {
-                posX = x;
-                posY = y + i;
+            if (direction === 'horizontal') {
+                rowIndex = row;
+                colIndex = column + i;
             } else {
-                posX = x + i;
-                posY = y;
+                rowIndex = row + i;
+                colIndex = column;
             }
 
-            this.grid[posX][posY] = tipoLower;
-            ship.posicoes.push([posX, posY]);
+            this.grid[rowIndex][colIndex] = typeLower;
+            ship.positions.push([rowIndex, colIndex]);
         }
 
         this.ships.push(ship);
@@ -95,6 +95,7 @@ class Board {
         this.grid = Array(10).fill(null).map(() => Array(10).fill(null));
         this.ships = [];
     }
+
 }
 
 export default Board;
