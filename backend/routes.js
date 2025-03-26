@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { registerUser, loginUser } from "./controllers/user.js";
 import { createMatch, getAllMatches, getMatchById, updateMatchById, deleteMatchById } from "./controllers/match.js";
+import { getBoard, resetBoard, addShip } from "./controllers/board.js";
 
 const router = new Router();
 
@@ -14,5 +15,10 @@ router.get("/matches", getAllMatches);
 router.get("/matches/:id", getMatchById);
 router.put("/matches/:id", updateMatchById);
 router.delete("/matches/:id", deleteMatchById);
+
+// Board Routes
+router.get("/board", getBoard);
+router.post("/board/reset", resetBoard);
+router.post("/board/add-ship", addShip);
 
 export default router;
