@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { registerUser, loginUser } from "./controllers/user.js";
-import { getBoard,resetBoard,addShip } from "./controllers/board.js";
+import { createMatch, getAllMatches, getMatchById, updateMatchById, deleteMatchById } from "./controllers/match.js";
+import { getBoard, resetBoard, addShip } from "./controllers/board.js";
 
 const router = new Router();
 
@@ -8,9 +9,16 @@ const router = new Router();
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 
+// Match Routes
+router.post("/matches", createMatch);
+router.get("/matches", getAllMatches);
+router.get("/matches/:id", getMatchById);
+router.put("/matches/:id", updateMatchById);
+router.delete("/matches/:id", deleteMatchById);
+
 // Board Routes
-router.get("/board", getBoard); 
-router.post("/board/reset", resetBoard); 
-router.post("/board/add-ship", addShip); 
+router.get("/board", getBoard);
+router.post("/board/reset", resetBoard);
+router.post("/board/add-ship", addShip);
 
 export default router;

@@ -1,7 +1,4 @@
-import {
-  insertUser,
-  selectUserByUsername,
-} from "../models/user.js";
+import { insertUser, selectUserByUsername } from "../models/user.js";
 import bcrypt from "bcryptjs";
 
 const registerUser = async (req, res) => {
