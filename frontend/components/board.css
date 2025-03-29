@@ -111,6 +111,7 @@ body {
 .cell.miss {
   background-color: #f44336;
   position: relative;
+  pointer-events: none;
 }
 
 .cell.miss:not(.hit)::before,
@@ -132,4 +133,5 @@ body {
 
 .cell.hit {
   background-color: #ffc107;
+  pointer-events: none;
 }

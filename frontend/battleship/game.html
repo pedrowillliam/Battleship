@@ -13,6 +13,7 @@
         <div class="player-info">
           <img width="120" src="../assets/user-photo.png" alt="avatar" />
           <p class="username">USERNAME</p>
+          <p class="score">🏆 Pontos: <span id="user-score"> 0</span></p>
         </div>
         <div id="board-component"></div>
         <div class="stats">
@@ -31,6 +32,7 @@
         <div class="player-info">
           <img width="140" src="../assets/user-ia.png" alt="avatar" />
           <div class="username">@robot</div>
+          <p class="score">🏆 Pontos: <span id="opponent-score"> 0</span></p>
         </div>
         <div id="board-component-two"></div>
         <div class="stats">
@@ -46,11 +48,11 @@
         </div>
       </div>
       <div class="controls">
-        <button class="btn restart">REINICIAR</button>
+        <button id="restart-btn" class="btn restart">REINICIAR</button>
         <button class="btn surrender" id="surrender-btn">DESISTIR</button>
       </div>
     </main>
-    <script src="../script/board.js"></script>
-    <script src="../script/game.js"></script>
+    <script type="module" src="../script/board.js"></script>
+    <script type="module" src="../../frontend/api/game.js"></script>
   </body>
 </html>
