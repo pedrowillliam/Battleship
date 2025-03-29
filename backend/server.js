@@ -3,6 +3,7 @@ import cors from "cors";
 import routes from "./routes.js";
 import { createTable as createUserTable } from "./models/user.js";
 import { createTable as createMatchTable } from "./models/match.js"; // Agora importando corretamente a função
+import { createRankingView } from "./models/ranking.js"; 
 import { pool } from "./config/database.js";
 
 const app = express();
@@ -20,9 +21,10 @@ app.listen(PORT, () => {
     .then(() => {
       console.log("Banco de dados conectado com sucesso!");
       
-      // Criação das tabelas de usuários e partidas
+      // Criação das tabelas de usuários, partidas e ranking
       createUserTable();
       createMatchTable();  // Garantir que a tabela de partidas também seja criada
+      createRankingView();  
     })
     .catch(err => console.error("Erro ao conectar no banco de dados:", err));
 });
