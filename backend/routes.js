@@ -2,6 +2,7 @@ import { Router } from "express";
 import { registerUser, loginUser } from "./controllers/user.js";
 import { createMatch, getAllMatches, getMatchById, updateMatchById, deleteMatchById } from "./controllers/match.js";
 import { getBoard, resetBoard, addShip } from "./controllers/board.js";
+import { fetchRanking } from "./controllers/ranking.js";
 
 const router = new Router();
 
@@ -20,5 +21,8 @@ router.delete("/matches/:id", deleteMatchById);
 router.get("/board", getBoard);
 router.post("/board/reset", resetBoard);
 router.post("/board/add-ship", addShip);
+
+// Ranking Routes
+router.get("/ranking", fetchRanking);
 
 export default router;
