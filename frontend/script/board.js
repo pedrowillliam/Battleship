@@ -1,5 +1,7 @@
 //Lógica do tabuleiro (posicionamento aleatorio dos navios, grid 10x10, etc)
 
+import { resetGame } from "../api/game.js";
+
 document.addEventListener("DOMContentLoaded", () => {
   loadComponent("../components/board.html", "board-component");
 });
@@ -20,6 +22,7 @@ function loadComponent(url, elementId, callback) {
 
 document.getElementById("surrender-btn").addEventListener("click", () => {
   localStorage.removeItem("username");
+  resetGame();
   window.location.href = "/frontend/battleship/login/login.html";
 });
 

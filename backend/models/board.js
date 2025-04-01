@@ -1,15 +1,21 @@
-//estrutura geral do navio
 class Board {
     constructor() {
         this.grid = Array(10).fill(null).map(() => Array(10).fill(null));
         this.ships = [];
-        
+        this.hitsTotal = 0;
+        this.missesTotal = 0;
+        this.attackTotal = 0;
+        this.scoreTotal = 0;
+
         this.shipConfigs = {
             'porta-avioes': { length: 6, limit: 1 },
             'navio-de-guerra': { length: 4, limit: 1 },
             'encouracado': { length: 3, limit: 2 },
             'submarino': { length: 1, limit: 1 }
         };
+
+        this.hits = Array(10).fill(null).map(() => Array(10).fill(false));
+        this.misses = Array(10).fill(null).map(() => Array(10).fill(false));
     }
 
     // verifica se é possível posicionar o navio
@@ -24,7 +30,7 @@ class Board {
                 if (this.grid[row][column + i] !== null) return false;
             }
         } else {
-            if (row + length > 10) return false;    
+            if (row + length > 10) return false;
             for (let i = 0; i < length; i++) {
                 if (this.grid[row + i][column] !== null) return false;
             }
@@ -35,17 +41,17 @@ class Board {
 
     validateShipLimit(type) {
         const config = this.shipConfigs[type];
-        if (!config) throw new Error('Tipo de navio inválido.');
+        if (!config) throw new Error(`Tipo de navio inválido: ${type}`);
 
         const naviosUsados = this.ships.filter(s => s.type === type).length;
         if (naviosUsados >= config.limit) {
-            throw new Error(`Limite de ${type} atingido.`);
+            throw new Error(`Limite de ${type} atingido (${config.limit}).`);
         }
     }
 
     getShipLength(type) {
         const config = this.shipConfigs[type];
-        if (!config) throw new Error('Tipo de navio inválido.');
+        if (!config) throw new Error(`Tipo de navio inválido: ${type}`);
         return config.length;
     }
 
@@ -83,6 +89,72 @@ class Board {
         this.ships.push(ship);
     }
 
+    placeBomb(row, column) {
+        if (row < 0 || row >= 10 || column < 0 || column >= 10) {
+            throw new Error('Coordenadas inválidas. Escolha valores entre 0 e 9.');
+        }
+
+        console.log(`Atirou em (${row}, ${column})`);        
+
+        if (this.hits[row][column] || this.misses[row][column]) {
+            throw new Error('Esta célula já foi bombardeada anteriormente.');
+        }
+
+        if (this.grid[row][column] !== null) {
+            this.hits[row][column] = true;
+            this.hitsTotal++;
+
+            const shipType = this.grid[row][column];
+            console.log(`Acertou um navio do tipo: ${shipType}`);
+            
+            const shipIndex = this.ships.findIndex(s => 
+                s.type === shipType && 
+                s.positions.some(p => p[0] === row && p[1] === column)
+            );
+
+            if (shipIndex === -1) {
+                console.error(`Erro: Navio não encontrado na posição (${row}, ${column})`);
+                return {
+                    hit: true,
+                    message: `Você acertou um ${shipType}!`,
+                    shipType,
+                    destroyed: false
+                };
+            }
+
+            const ship = this.ships[shipIndex];
+            
+            const allPositionsHit = ship.positions.every(([r, c]) => {
+                const isHit = this.hits[r][c];
+                console.log(`Posição (${r}, ${c}) atingida: ${isHit}`);
+                return isHit;
+            });
+
+            if (allPositionsHit) {
+                return {
+                    hit: true,
+                    message: `Você acertou e destruiu um ${shipType}!`,
+                    shipType,
+                    destroyed: true
+                };
+            } else {
+                return {
+                    hit: true,
+                    message: `Você acertou um ${shipType}!`,
+                    shipType,
+                    destroyed: false
+                };
+            }
+        } else {
+            this.misses[row][column] = true;
+            this.missesTotal++;
+            return {
+                hit: false,
+                message: 'Você errou o tiro. Tente novamente!',
+            };
+        }
+    }
+
     getGrid() {
         return this.grid;
     }
@@ -91,9 +163,38 @@ class Board {
         return this.ships;
     }
 
+    getAttackTotal() {
+        return this.hitsTotal + this.missesTotal;
+    }
+
+    getScore() {
+        const attackTotal = this.getAttackTotal();
+
+        if (attackTotal === 0) return 0;
+        
+        const accuracy = this.hitsTotal / attackTotal;
+        const basePoints = 1000;
+
+        const destroyedShips = this.ships.filter(ship => 
+            ship.positions.every(([r, c]) => this.hits[r][c])
+        ).length;
+        
+        const destroyedBonus = destroyedShips * 200;
+        const missedPenalty = this.missesTotal * 10;
+        
+        this.scoreTotal = Math.round((basePoints * accuracy) + destroyedBonus - missedPenalty);
+        return Math.max(0, this.scoreTotal);
+    }
+
     resetBoard() {
         this.grid = Array(10).fill(null).map(() => Array(10).fill(null));
         this.ships = [];
+        this.hitsTotal = 0;
+        this.missesTotal = 0;
+        this.attackTotal = 0;
+        this.scoreTotal = 0;
+        this.hits = Array(10).fill(null).map(() => Array(10).fill(false));
+        this.misses = Array(10).fill(null).map(() => Array(10).fill(false));
     }
 
 }

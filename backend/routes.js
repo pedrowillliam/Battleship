@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { registerUser, loginUser } from "./controllers/user.js";
 import { createMatch, getAllMatches, getMatchById, updateMatchById, deleteMatchById } from "./controllers/match.js";
-import { getBoard, resetBoard, addShip } from "./controllers/board.js";
+import { getBoard, resetBoard, addShip, attack, getGameState, startGame } from "./controllers/board.js";
 import { fetchRanking } from "./controllers/ranking.js";
 
 const router = new Router();
@@ -22,7 +22,10 @@ router.get("/board", getBoard);
 router.post("/board/reset", resetBoard);
 router.post("/board/add-ship", addShip);
 
-// Ranking Routes
+// Game
+router.post("/game/attack", attack);
+router.post("/game/start", startGame);
+router.get("/game/state", getGameState);
 router.get("/ranking", fetchRanking);
 
 export default router;

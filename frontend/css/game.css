@@ -143,3 +143,7 @@ html {
 .btn.surrender:hover {
   background-color: rgb(212, 100, 100);
 }
+
+.score span {
+  color: yellow;
+}
