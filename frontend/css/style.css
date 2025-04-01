@@ -1,18 +1,130 @@
+/* Importação de fontes */
 @import url("https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap");
 
-*{
-    margin: 0;
-    padding: 0;
+
+html, body {
+  overflow: hidden; 
+  height: 100%; 
+  margin: 0; 
+  padding: 0; 
 }
 
-h1 {
-    text-align: center;
+.container {
+  display: flex;
+  justify-content: space-between; 
+  gap: 20px; 
+  padding: 20px;
+}
+
+.left, .right {
+  width: 48%; 
+  padding: 20px;
+  box-sizing: border-box; 
+}
+
+.iframe-regras, .iframe-ranking {
+  width: 100%;
+  border: none;
+  display: block;
+}
+
+.iframe-regras {
+  height: 400px; 
+  margin: 30px;
+}
+
+.iframe-ranking {
+  height: 600px; 
+  margin-top: -30px;
+}
+
+.titulo-batalha {
+    width: 636px;
+    height: 96px;
+    margin: 0px auto 0 auto; 
+    margin-right: 10px;
     font-family: "Inria Sans", sans-serif;
+    font-weight: 700;
+    font-size: 96px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-#restart-btn{
-    background-color: red;
-    color: white;
-    cursor: pointer;
-    transition: background 0.3s;
+.titulo-ranking {
+  font-size: 2em;
+  text-align: center;
+  margin-left: 20px;
+  
+}
+
+.subtitulo {
+    width: 535px;
+    height: 40px;
+    margin: 0 auto; 
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-style: italic;
+    font-size: 24px;
+    line-height: 40px;
+    letter-spacing: 0%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.play-btn {
+  display: block;
+  width: 100%; 
+  max-width: 314px; 
+  margin: 20px auto; 
+  height: 60px;
+  border-radius: 30px;
+  border-top: 2px solid black; 
+  border-left: 2px solid black;
+  border-right: 4px solid black; 
+  border-bottom: 4px solid black; 
+  padding: 15px;
+  background-color: #F16858;
+  color: black;
+  font-size: 1.2em;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none; 
+  margin-top: -25px;
+}
+
+.play-btn span {
+    font-family: "Inria Sans", sans-serif; 
+    font-weight: 700; 
+    font-size: 20px; 
+    line-height: 100%; 
+    letter-spacing: 0%; 
+}
+  
+
+.play-btn:hover {
+  background-color: #F16858;
+}
+
+/* Ajuste para garantir responsividade */
+@media screen and (max-width: 768px) {
+  .container {
+    flex-direction: column; /* Coloca as seções uma embaixo da outra */
+  }
+  
+  .left, .right {
+    width: 100%; /* Cada seção ocupa toda a largura */
+    padding: 10px;
+  }
+
+  .iframe-regras, .iframe-ranking {
+    height: 300px; /* Reduz a altura para telas menores */
+  }
 }

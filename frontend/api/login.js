@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector(".login-form");
+  const rankingBtn = document.querySelector(".ranking-btn");
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -27,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         alert(data.message);
         console.log("Registro realizado com sucesso", data);
         localStorage.setItem("username", username);
-        window.location.href = "/frontend/battleship/game.html";
+        window.location.href = "/Battleship/frontend/battleship/game.html";
       } else {
         alert(data.message || "Erro no login!");
       }
@@ -36,4 +37,9 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Erro na conexão com o servidor.");
     }
   });
+  if (rankingBtn) {
+    rankingBtn.addEventListener("click", () => {
+      window.location.href = "/Battleship/index.html";  // Redireciona para a tela inicial
+    });
+  }
 });
