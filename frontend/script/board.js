@@ -23,13 +23,13 @@ function loadComponent(url, elementId, callback) {
 document.getElementById("surrender-btn").addEventListener("click", () => {
   localStorage.removeItem("username");
   resetGame();
-  window.location.href = "/frontend/battleship/login/login.html";
+  window.location.href = "../../index.html";
 });
 
 document.addEventListener("DOMContentLoaded", () => {
   const username = localStorage.getItem("username");
   if (!username) {
-    window.location.href = "/frontend/battleship/login/login.html";
+    window.location.href = "../../index.html";
     return;
   } 
   document.querySelector(".half.blue .username").textContent = '@' + username;
