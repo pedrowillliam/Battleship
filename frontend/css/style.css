@@ -40,8 +40,6 @@ html, body {
 }
 
 .titulo-batalha {
-    width: 636px;
-    height: 96px;
     margin: 0px auto 0 auto; 
     margin-right: 10px;
     font-family: "Inria Sans", sans-serif;
@@ -63,8 +61,6 @@ html, body {
 }
 
 .subtitulo {
-    width: 535px;
-    height: 40px;
     margin: 0 auto; 
     font-family: "Inter", sans-serif;
     font-weight: 500;

@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         alert(data.message);
         console.log("Registro realizado com sucesso", data);
         localStorage.setItem("username", username);
-        window.location.href = "/Battleship/frontend/battleship/game.html";
+        window.location.href = "../../battleship/game.html";
       } else {
         alert(data.message || "Erro no login!");
       }
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   if (rankingBtn) {
     rankingBtn.addEventListener("click", () => {
-      window.location.href = "/Battleship/index.html";  // Redireciona para a tela inicial
+      window.location.href = "../../../index.html"; 
     });
   }
 });

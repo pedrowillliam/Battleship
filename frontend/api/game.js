@@ -119,17 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
       restartGame();
     });
   }
- 
-  /* não consegui fazer esse redirecionamento funcionar.
-  const desistirBtn = document.getElementById('surrender-btn');
-  if (desistirBtn) {
-    desistirBtn.addEventListener('click', () => {
-      // Remover o usuário do localStorage (fazer o logout)
-      localStorage.removeItem('username');
-      window.location.href = '/Battleship/index.html';
-    });
-  }
-  */ 
 });
 
 
