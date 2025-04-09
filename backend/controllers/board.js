@@ -1,5 +1,6 @@
 import Board from "../models/board.js";
 import opponentBoardMock from "../mock/opponentBoard.js";
+import { smartBotAttack } from "../ia/intelligentAttack.js";
 
 const playerBoard = new Board();
 let opponentBoard = new Board();
@@ -8,8 +9,7 @@ const getBoard = (_, res) => {
     try {
         const grid = playerBoard.getGrid();
         const ships = playerBoard.getShips();
-        
-        // Retorna o tabuleiro com status 200 (sucesso)
+
         res.status(200).json({
             message: "Tabuleiro obtido com sucesso!",
             grid,
@@ -28,7 +28,7 @@ const resetBoard = (_, res) => {
     try {
         playerBoard.resetBoard();
         opponentBoard.resetBoard();
-        
+
         res.status(200).json({
             message: "Tabuleiro resetado com sucesso!",
             grid: playerBoard.getGrid()
@@ -44,14 +44,14 @@ const resetBoard = (_, res) => {
 
 const addShip = (req, res) => {
     const { type, row, column, direction } = req.body;
-    
+
     if (!type || row === undefined || column === undefined || !direction) {
         return res.status(400).json({ message: "Todos os campos (type, row, column, direction) são obrigatórios!" });
     }
 
     try {
         playerBoard.addShip({ type, row, column, direction });
-        
+
         res.status(201).json({
             message: "Navio adicionado com sucesso!",
             grid: playerBoard.getGrid(),
@@ -66,7 +66,6 @@ const addShip = (req, res) => {
     }
 };
 
-// 🚨 REMOVER FUNÇÃO DEPOIS QUE IMPLEMENTAR A IA 🚨
 function initializeOpponentBoardWithMock() {
     try {
         for (let i = 0; i < 10; i++) {
@@ -76,14 +75,14 @@ function initializeOpponentBoardWithMock() {
                 }
             }
         }
-        
+
         opponentBoardMock.ships.forEach(ship => {
             opponentBoard.ships.push({
                 type: ship.type,
                 positions: [...ship.positions]
             });
         });
-        
+
         console.log("Tabuleiro do oponente carregado com sucesso a partir do mock!");
         return { success: true, message: "Tabuleiro do oponente inicializado com sucesso!" };
     } catch (error) {
@@ -94,22 +93,32 @@ function initializeOpponentBoardWithMock() {
 
 const attack = (req, res) => {
     const { row, column } = req.body;
-    
+
     if (row === undefined || column === undefined) {
         return res.status(400).json({
             message: "As coordenadas do ataque (row, column) são obrigatórias!"
         });
     }
-    
+
     try {
-        const result = opponentBoard.placeBomb(row, column);
-            
+        // Jogador ataca o oponente
+        const playerResult = opponentBoard.placeBomb(row, column);
+
+        // IA ataca o jogador de forma inteligente
+        const [botRow, botCol] = smartBotAttack(playerBoard);
+        const botResult = playerBoard.placeBomb(botRow, botCol);
+
         res.status(200).json({
             playerAttack: {
-                ...result
+                row, column,
+                ...playerResult
             },
+            botAttack: {
+                row: botRow, column: botCol,
+                ...botResult
+            }
         });
-        
+
     } catch (error) {
         console.error(error);
         res.status(400).json({
@@ -123,16 +132,16 @@ const startGame = (_, res) => {
     try {
         playerBoard.resetBoard();
         opponentBoard.resetBoard();
-        
+
         const opponentResult = initializeOpponentBoardWithMock();
-        
+
         if (!opponentResult.success) {
             return res.status(500).json({
                 message: "Erro ao inicializar o jogo",
                 error: opponentResult.message
             });
         }
-        
+
         res.status(200).json({
             message: "Novo jogo iniciado com sucesso!",
             playerGrid: playerBoard.getGrid()
@@ -156,14 +165,13 @@ const getGameState = (_, res) => {
                 score: opponentBoard.getScore(),
                 gridHits: opponentBoard.hits
             },
-
-            // 🚨 RETORNAR OS DADOS DO OPONENTE QUANDO IMPLEMENTAR A IA 🚨
-
-            // opponentStatus: {
-            //     hitsTotal: playerBoard.getHitsTotal(),
-            //     missesTotal: playerBoard.getMissesTotal(),
-            //     hits: playerBoard.getHits(),
-            // }
+            opponentStatus: {
+                fireHits: playerBoard.hitsTotal,
+                fireMisses: playerBoard.missesTotal,
+                totalAttacks: playerBoard.getAttackTotal(),
+                score: playerBoard.getScore(),
+                gridHits: playerBoard.hits
+            }
         });
     } catch (error) {
         console.error(error);
