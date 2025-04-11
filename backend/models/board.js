@@ -116,6 +116,7 @@ class Board {
                 console.error(`Erro: Navio não encontrado na posição (${row}, ${column})`);
                 return {
                     hit: true,
+                    continueTurn: true,
                     message: `Você acertou um ${shipType}!`,
                     shipType,
                     destroyed: false
@@ -133,6 +134,7 @@ class Board {
             if (allPositionsHit) {
                 return {
                     hit: true,
+                    continueTurn: true,
                     message: `Você acertou e destruiu um ${shipType}!`,
                     shipType,
                     destroyed: true
@@ -140,6 +142,7 @@ class Board {
             } else {
                 return {
                     hit: true,
+                    continueTurn: true,
                     message: `Você acertou um ${shipType}!`,
                     shipType,
                     destroyed: false
@@ -150,7 +153,8 @@ class Board {
             this.missesTotal++;
             return {
                 hit: false,
-                message: 'Você errou o tiro. Tente novamente!',
+                continueTurn: false,
+                message: 'Você errou o tiro. Vez do oponente!',
             };
         }
     }
