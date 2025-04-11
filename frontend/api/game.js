@@ -83,20 +83,20 @@ document.addEventListener('DOMContentLoaded', () => {
   boardContainer.addEventListener('click', async (event) => {
     const cell = event.target.closest('.cell');
     if (!cell) return;
-
+  
     const row = event.target.closest('.row');
     if (!row) return;
-
+  
     let rowIndex, columnIndex;
     const rowLetter = row.querySelector('p').textContent;
-
+  
     const letterToNumber = {
       'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4,
       'F': 5, 'G': 6, 'H': 7, 'I': 8, 'J': 9
     };
-
+  
     const firstRow = cell.closest('.first-row');
-
+  
     if (firstRow) {
       rowIndex = 0;
       const rowCells = row.querySelector('.row-cells');
@@ -107,10 +107,26 @@ document.addEventListener('DOMContentLoaded', () => {
       const cellsContainer = row.querySelector('div[style*="display: flex"]');
       columnIndex = Array.from(cellsContainer.children).indexOf(cell);
     }
-
+  
     const attack = await makeAttack(rowIndex, columnIndex);
-    attack.hit ? cell.classList.add('hit') : cell.classList.add('miss');
+  
+    // Aplica visual de hit/miss
+    if (attack.hit) {
+      cell.classList.add('hit');
+    } else {
+      cell.classList.add('miss');
+    }
+  
+    // Exibe mensagem pro jogador com base no resultado
+    if (attack.message) {
+      if (attack.continueTurn) {
+        alert(`${attack.message}`);
+      } else {
+        alert(`${attack.message}`);
+      }
+    }
   });
+  
 
   const restartBtn = document.getElementById('restart-btn');
   if (restartBtn) {
