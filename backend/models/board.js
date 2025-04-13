@@ -150,7 +150,8 @@ class Board {
             this.missesTotal++;
             return {
                 hit: false,
-                message: 'Você errou o tiro. Tente novamente!',
+                continueTurn: false,
+                message: 'Você errou o tiro. Vez do oponente!',
             };
         }
     }
