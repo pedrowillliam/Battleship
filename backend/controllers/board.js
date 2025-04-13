@@ -121,7 +121,6 @@ const attack = (req, res) => {
 
 const startGame = (_, res) => {
     try {
-        playerBoard.resetBoard();
         opponentBoard.resetBoard();
         
         const opponentResult = initializeOpponentBoardWithMock();
