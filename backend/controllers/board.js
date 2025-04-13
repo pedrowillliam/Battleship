@@ -181,3 +181,13 @@ const getGameState = (_, res) => {
         });
     }
 };
+
+// ✅ Exportação nomeada e completa
+export {
+    getBoard,
+    resetBoard,
+    addShip,
+    getGameState,
+    attack,
+    startGame
+};
