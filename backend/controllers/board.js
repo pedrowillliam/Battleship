@@ -9,7 +9,7 @@ const getBoard = (_, res) => {
     try {
         const grid = playerBoard.getGrid();
         const ships = playerBoard.getShips();
-        
+
         res.status(200).json({
             message: "Tabuleiro obtido com sucesso!",
             grid,
@@ -28,7 +28,7 @@ const resetBoard = (_, res) => {
     try {
         playerBoard.resetBoard();
         opponentBoard.resetBoard();
-        
+
         res.status(200).json({
             message: "Tabuleiro resetado com sucesso!",
             grid: playerBoard.getGrid()
@@ -44,14 +44,14 @@ const resetBoard = (_, res) => {
 
 const addShip = (req, res) => {
     const { type, row, column, direction } = req.body;
-    
+
     if (!type || row === undefined || column === undefined || !direction) {
         return res.status(400).json({ message: "Todos os campos (type, row, column, direction) são obrigatórios!" });
     }
 
     try {
         playerBoard.addShip({ type, row, column, direction });
-        
+
         res.status(201).json({
             message: "Navio adicionado com sucesso!",
             grid: playerBoard.getGrid(),
@@ -75,14 +75,14 @@ function initializeOpponentBoardWithMock() {
                 }
             }
         }
-        
+
         opponentBoardMock.ships.forEach(ship => {
             opponentBoard.ships.push({
                 type: ship.type,
                 positions: [...ship.positions]
             });
         });
-        
+
         console.log("Tabuleiro do oponente carregado com sucesso a partir do mock!");
         return { success: true, message: "Tabuleiro do oponente inicializado com sucesso!" };
     } catch (error) {
@@ -92,50 +92,31 @@ function initializeOpponentBoardWithMock() {
 }
 
 const attack = (req, res) => {
-    const { moves } = req.body;
+    const { row, column } = req.body;
 
-    if (!Array.isArray(moves) || moves.length === 0) {
+    if (row === undefined || column === undefined) {
         return res.status(400).json({
-            message: "Envie uma sequência de jogadas no formato [{ row, column }, ...]"
+            message: "As coordenadas do ataque (row, column) são obrigatórias!"
         });
     }
 
     try {
-        const playerSequence = [];
-        let continueTurn = true;
+        // Jogador ataca o oponente
+        const playerResult = opponentBoard.placeBomb(row, column);
 
-        for (const move of moves) {
-            const { row, column } = move;
-
-            const result = opponentBoard.placeBomb(row, column);
-
-            playerSequence.push({
-                row,
-                column,
-                ...result
-            });
-
-            if (!result.hit) {
-                continueTurn = false;
-                break;
-            }
-        }
-
-        let botAttack = null;
-
-        if (!continueTurn) {
-            const [botRow, botCol] = smartBotAttack(playerBoard);
-            const botResult = playerBoard.placeBomb(botRow, botCol);
-            botAttack = {
-                row: botRow,
-                column: botCol,
-                ...botResult
-            };
-        }
+        // IA ataca o jogador de forma inteligente
+        const [botRow, botCol] = smartBotAttack(playerBoard);
+        const botResult = playerBoard.placeBomb(botRow, botCol);
 
         res.status(200).json({
-            playerSequence,
-            botAttack
+            playerAttack: {
+                row, column,
+                ...playerResult
+            },
+            botAttack: {
+                row: botRow, column: botCol,
+                ...botResult
+            }
         });
 
     } catch (error) {
@@ -151,16 +132,16 @@ const startGame = (_, res) => {
     try {
         playerBoard.resetBoard();
         opponentBoard.resetBoard();
-        
+
         const opponentResult = initializeOpponentBoardWithMock();
-        
+
         if (!opponentResult.success) {
             return res.status(500).json({
                 message: "Erro ao inicializar o jogo",
                 error: opponentResult.message
             });
         }
-        
+
         res.status(200).json({
             message: "Novo jogo iniciado com sucesso!",
             playerGrid: playerBoard.getGrid()
@@ -200,5 +181,3 @@ const getGameState = (_, res) => {
         });
     }
 };
-
-export { getBoard, resetBoard, addShip, getGameState, attack, startGame };
