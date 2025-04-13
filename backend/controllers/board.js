@@ -1,6 +1,7 @@
 import Board from "../models/board.js";
 import opponentBoardMock from "../mock/opponentBoard.js";
 import { smartBotAttack } from "../ia/intelligentAttack.js";
+import { intelligentPlacement } from "../ia/intelligentPlacement.js";
 
 const playerBoard = new Board();
 let opponentBoard = new Board();
@@ -91,6 +92,28 @@ function initializeOpponentBoardWithMock() {
     }
 }
 
+// Nova função para inicializar o tabuleiro da IA com posicionamento inteligente
+function initializeOpponentBoardIntelligently() {
+    try {
+        // Resetar o tabuleiro para garantir que esteja limpo
+        opponentBoard.resetBoard();
+        
+        // Posicionar navios de forma estratégica
+        const result = intelligentPlacement(opponentBoard);
+        
+        if (result) {
+            console.log("Tabuleiro do oponente inicializado com posicionamento inteligente!");
+            return { success: true, message: "Tabuleiro do oponente inicializado com posicionamento inteligente!" };
+        } else {
+            console.error("Falha no posicionamento inteligente dos navios do oponente.");
+            return { success: false, message: "Falha no posicionamento inteligente." };
+        }
+    } catch (error) {
+        console.error("Erro ao inicializar tabuleiro do oponente:", error);
+        return { success: false, message: error.message };
+    }
+}
+
 const attack = (req, res) => {
     const { moves } = req.body;
 
@@ -152,13 +175,20 @@ const startGame = (_, res) => {
         playerBoard.resetBoard();
         opponentBoard.resetBoard();
 
-        const opponentResult = initializeOpponentBoardWithMock();
-
+        // Usar o posicionamento inteligente ao invés do mock fixo
+        const opponentResult = initializeOpponentBoardIntelligently();
+        
+        // Se falhar o posicionamento inteligente, voltar para o mock como fallback
         if (!opponentResult.success) {
-            return res.status(500).json({
-                message: "Erro ao inicializar o jogo",
-                error: opponentResult.message
-            });
+            console.warn("Posicionamento inteligente falhou, usando mock como fallback.");
+            const fallbackResult = initializeOpponentBoardWithMock();
+            
+            if (!fallbackResult.success) {
+                return res.status(500).json({
+                    message: "Erro ao inicializar o jogo",
+                    error: fallbackResult.message
+                });
+            }
         }
 
         res.status(200).json({
