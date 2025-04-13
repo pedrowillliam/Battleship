@@ -92,31 +92,50 @@ function initializeOpponentBoardWithMock() {
 }
 
 const attack = (req, res) => {
-    const { row, column } = req.body;
+    const { moves } = req.body;
 
-    if (row === undefined || column === undefined) {
+    if (!Array.isArray(moves) || moves.length === 0) {
         return res.status(400).json({
-            message: "As coordenadas do ataque (row, column) são obrigatórias!"
+            message: "Envie uma sequência de jogadas no formato [{ row, column }, ...]"
         });
     }
 
     try {
-        // Jogador ataca o oponente
-        const playerResult = opponentBoard.placeBomb(row, column);
+        const playerSequence = [];
+        let continueTurn = true;
 
-        // IA ataca o jogador de forma inteligente
-        const [botRow, botCol] = smartBotAttack(playerBoard);
-        const botResult = playerBoard.placeBomb(botRow, botCol);
+        for (const move of moves) {
+            const { row, column } = move;
+
+            const result = opponentBoard.placeBomb(row, column);
+
+            playerSequence.push({
+                row,
+                column,
+                ...result
+            });
+
+            if (!result.hit) {
+                continueTurn = false;
+                break;
+            }
+        }
+
+        let botAttack = null;
+
+        if (!continueTurn) {
+            const [botRow, botCol] = smartBotAttack(playerBoard);
+            const botResult = playerBoard.placeBomb(botRow, botCol);
+            botAttack = {
+                row: botRow,
+                column: botCol,
+                ...botResult
+            };
+        }
 
         res.status(200).json({
-            playerAttack: {
-                row, column,
-                ...playerResult
-            },
-            botAttack: {
-                row: botRow, column: botCol,
-                ...botResult
-            }
+            playerSequence,
+            botAttack
         });
 
     } catch (error) {
