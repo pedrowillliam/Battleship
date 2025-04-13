@@ -1,6 +1,6 @@
 import Board from "../models/board.js";
-import opponentBoardMock from "../mock/opponentBoard.js";
 import { smartBotAttack } from "../ia/intelligentAttack.js";
+import { intelligentPlacement } from "../ia/intelligentPlacement.js";
 
 const playerBoard = new Board();
 let opponentBoard = new Board();
@@ -66,25 +66,19 @@ const addShip = (req, res) => {
     }
 };
 
-function initializeOpponentBoardWithMock() {
+function initializeOpponentBoard() {
     try {
-        for (let i = 0; i < 10; i++) {
-            for (let j = 0; j < 10; j++) {
-                if (opponentBoardMock.grid[i][j] !== null) {
-                    opponentBoard.grid[i][j] = opponentBoardMock.grid[i][j];
-                }
-            }
+        // Usar o posicionamento inteligente em vez do mock
+        opponentBoard.resetBoard();
+        const success = intelligentPlacement(opponentBoard);
+        
+        if (success) {
+            console.log("Tabuleiro do oponente inicializado com sucesso usando IA!");
+            return { success: true, message: "Tabuleiro do oponente inicializado com sucesso!" };
+        } else {
+            console.error("Falha ao inicializar tabuleiro do oponente com IA");
+            return { success: false, message: "Falha ao inicializar tabuleiro do oponente" };
         }
-
-        opponentBoardMock.ships.forEach(ship => {
-            opponentBoard.ships.push({
-                type: ship.type,
-                positions: [...ship.positions]
-            });
-        });
-
-        console.log("Tabuleiro do oponente carregado com sucesso a partir do mock!");
-        return { success: true, message: "Tabuleiro do oponente inicializado com sucesso!" };
     } catch (error) {
         console.error("Erro ao inicializar tabuleiro do oponente:", error);
         return { success: false, message: error.message };
@@ -133,7 +127,7 @@ const startGame = (_, res) => {
         playerBoard.resetBoard();
         opponentBoard.resetBoard();
 
-        const opponentResult = initializeOpponentBoardWithMock();
+        const opponentResult = initializeOpponentBoard();
 
         if (!opponentResult.success) {
             return res.status(500).json({
@@ -182,7 +176,7 @@ const getGameState = (_, res) => {
     }
 };
 
-// ✅ Exportação nomeada e completa
+
 export {
     getBoard,
     resetBoard,
