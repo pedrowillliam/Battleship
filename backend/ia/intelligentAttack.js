@@ -11,17 +11,14 @@ export function smartBotAttack(board) {
                 ];
 
                 for (const [dr, dc] of directions) {
-                    let nr = r + dr;
-                    let nc = c + dc;
+                    const nr = r + dr;
+                    const nc = c + dc;
 
-                    // Enquanto dentro do tabuleiro e ainda não foi tentado
-                    while (nr >= 0 && nr < size && nc >= 0 && nc < size) {
+                    // Verificar se está dentro do tabuleiro e ainda não foi tentado
+                    if (nr >= 0 && nr < size && nc >= 0 && nc < size) {
                         if (!hits[nr][nc] && !misses[nr][nc]) {
                             return [nr, nc];
                         }
-                        if (!hits[nr][nc]) break; // parou de acertar
-                        nr += dr;
-                        nc += dc;
                     }
                 }
             }
