@@ -1,7 +1,6 @@
 import Board from "../models/board.js";
 import opponentBoardMock from "../mock/opponentBoard.js";
 import { smartBotAttack } from "../ia/intelligentAttack.js";
-import { intelligentPlacement } from "../ia/intelligentPlacement.js";
 
 const playerBoard = new Board();
 let opponentBoard = new Board();
@@ -10,7 +9,7 @@ const getBoard = (_, res) => {
     try {
         const grid = playerBoard.getGrid();
         const ships = playerBoard.getShips();
-
+        
         res.status(200).json({
             message: "Tabuleiro obtido com sucesso!",
             grid,
@@ -29,7 +28,7 @@ const resetBoard = (_, res) => {
     try {
         playerBoard.resetBoard();
         opponentBoard.resetBoard();
-
+        
         res.status(200).json({
             message: "Tabuleiro resetado com sucesso!",
             grid: playerBoard.getGrid()
@@ -45,14 +44,14 @@ const resetBoard = (_, res) => {
 
 const addShip = (req, res) => {
     const { type, row, column, direction } = req.body;
-
+    
     if (!type || row === undefined || column === undefined || !direction) {
         return res.status(400).json({ message: "Todos os campos (type, row, column, direction) são obrigatórios!" });
     }
 
     try {
         playerBoard.addShip({ type, row, column, direction });
-
+        
         res.status(201).json({
             message: "Navio adicionado com sucesso!",
             grid: playerBoard.getGrid(),
@@ -76,38 +75,16 @@ function initializeOpponentBoardWithMock() {
                 }
             }
         }
-
+        
         opponentBoardMock.ships.forEach(ship => {
             opponentBoard.ships.push({
                 type: ship.type,
                 positions: [...ship.positions]
             });
         });
-
+        
         console.log("Tabuleiro do oponente carregado com sucesso a partir do mock!");
         return { success: true, message: "Tabuleiro do oponente inicializado com sucesso!" };
-    } catch (error) {
-        console.error("Erro ao inicializar tabuleiro do oponente:", error);
-        return { success: false, message: error.message };
-    }
-}
-
-// Nova função para inicializar o tabuleiro da IA com posicionamento inteligente
-function initializeOpponentBoardIntelligently() {
-    try {
-        // Resetar o tabuleiro para garantir que esteja limpo
-        opponentBoard.resetBoard();
-        
-        // Posicionar navios de forma estratégica
-        const result = intelligentPlacement(opponentBoard);
-        
-        if (result) {
-            console.log("Tabuleiro do oponente inicializado com posicionamento inteligente!");
-            return { success: true, message: "Tabuleiro do oponente inicializado com posicionamento inteligente!" };
-        } else {
-            console.error("Falha no posicionamento inteligente dos navios do oponente.");
-            return { success: false, message: "Falha no posicionamento inteligente." };
-        }
     } catch (error) {
         console.error("Erro ao inicializar tabuleiro do oponente:", error);
         return { success: false, message: error.message };
@@ -174,23 +151,16 @@ const startGame = (_, res) => {
     try {
         playerBoard.resetBoard();
         opponentBoard.resetBoard();
-
-        // Usar o posicionamento inteligente ao invés do mock fixo
-        const opponentResult = initializeOpponentBoardIntelligently();
         
-        // Se falhar o posicionamento inteligente, voltar para o mock como fallback
+        const opponentResult = initializeOpponentBoardWithMock();
+        
         if (!opponentResult.success) {
-            console.warn("Posicionamento inteligente falhou, usando mock como fallback.");
-            const fallbackResult = initializeOpponentBoardWithMock();
-            
-            if (!fallbackResult.success) {
-                return res.status(500).json({
-                    message: "Erro ao inicializar o jogo",
-                    error: fallbackResult.message
-                });
-            }
+            return res.status(500).json({
+                message: "Erro ao inicializar o jogo",
+                error: opponentResult.message
+            });
         }
-
+        
         res.status(200).json({
             message: "Novo jogo iniciado com sucesso!",
             playerGrid: playerBoard.getGrid()
