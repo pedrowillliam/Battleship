@@ -66,6 +66,10 @@ class Board {
             throw new Error('Posição inválida para o navio.');
         }
 
+        if(!this.hasMinimumDistanceFromOtherShips(row, column, length, direction)) {
+            throw new Error('Navios devem ter pelo menos uma célula de distância entre si.');
+        }
+
         const ship = {
             type: typeLower,
             positions: []
@@ -89,6 +93,30 @@ class Board {
         this.ships.push(ship);
     }
 
+    hasMinimumDistanceFromOtherShips(row, column, length, direction) {
+        const boardSize = this.grid.length;
+        
+        const startRow = Math.max(0, row - 1);
+        const endRow = direction === 'horizontal' 
+          ? Math.min(boardSize - 1, row + 1)
+          : Math.min(boardSize - 1, row + length);
+        
+        const startCol = Math.max(0, column - 1);
+        const endCol = direction === 'horizontal' 
+          ? Math.min(boardSize - 1, column + length)
+          : Math.min(boardSize - 1, column + 1);
+        
+        for (let r = startRow; r <= endRow; r++) {
+          for (let c = startCol; c <= endCol; c++) {
+            if (this.grid[r][c] !== null && this.grid[r][c] !== undefined) {
+              return false;
+            }
+          }
+        }
+        
+        return true;
+    }
+    
     placeBomb(row, column) {
         if (row < 0 || row >= 10 || column < 0 || column >= 10) {
             throw new Error('Coordenadas inválidas. Escolha valores entre 0 e 9.');

@@ -1,5 +1,5 @@
 .preview-ship { background-color: #88f58d !important; }
-.placed-ship { background-color: yellow !important; }
+.placed-ship { background-color: rgba(200, 200, 193, 0.97) !important; }
 .invalid-placement { background-color: #ff6b6b !important; }
 
 .ship-placement-container {

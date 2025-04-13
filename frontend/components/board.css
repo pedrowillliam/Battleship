@@ -135,3 +135,7 @@ body {
   background-color: #ffc107;
   pointer-events: none;
 }
+
+.cell.hit-ia {
+  background-color: #ffc107 !important;
+}

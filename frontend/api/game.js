@@ -9,9 +9,8 @@ async function makeAttack(row, column) {
     });
 
     const data = await response.json();
-    console.log(data);
     await updateStats();
-    return data.playerAttack;
+    return data;
   } catch (error) {
     console.error('Erro na requisição:', error);
   }
@@ -25,8 +24,6 @@ export async function restartGame() {
         'Content-Type': 'application/json',
       }
     });
-
-    console.log(response);
 
     if (response.ok) {
       location.reload();
@@ -52,7 +49,6 @@ export async function resetGame() {
   }
 }
 
-
 async function updateStats() {
   try {
     const response = await fetch('http://localhost:3000/game/state');
@@ -61,23 +57,45 @@ async function updateStats() {
     }
     const gameState = await response.json();
 
-    document.getElementById('user-shots').textContent = gameState.playerStatus.totalAttacks;
-    document.getElementById('user-hits').textContent = gameState.playerStatus.fireHits;
-    document.getElementById('user-misses').textContent = gameState.playerStatus.fireMisses;
+    document.getElementById('user-shots').textContent = gameState.opponentStatus.totalAttacks;
+    document.getElementById('user-hits').textContent = gameState.opponentStatus.fireHits;
+    document.getElementById('user-misses').textContent = gameState.opponentStatus.fireMisses;
+    document.getElementById('user-score').textContent = gameState.opponentStatus.score;
 
-    document.getElementById('user-score').textContent = gameState.playerStatus.score;
+    document.getElementById('opponent-shots').textContent = gameState.playerStatus.totalAttacks;
+    document.getElementById('opponent-hits').textContent = gameState.playerStatus.fireHits;
+    document.getElementById('opponent-misses').textContent = gameState.playerStatus.fireMisses;
+    document.getElementById('opponent-score').textContent = gameState.playerStatus.score;
+
+    return gameState;
 
   } catch (error) {
     console.error('Erro ao atualizar o estado do jogo:', error);
   }
 }
 
-
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const boardContainer = document.querySelector('#board-component');
-  if (!boardContainer) {
-    console.error('Erro: O "board" não foi encontrada no DOM.');
+  const opponentBoardContainer = document.querySelector('#board-component-two');
+  if (!boardContainer && !opponentBoardContainer) {
+    console.error('Erro: O tabuleiro não foi encontrado no DOM.');
     return;
+  }
+
+  boardContainer.style.opacity = "0.7";
+  boardContainer.style.pointerEvents = 'none';
+
+  function getCellByPosition(board, row, column) {
+    const rows = board.querySelectorAll('.row');
+    if (row === 0) {
+      const firstRow = rows[0].querySelector('.row-cells');
+      const firstRowCells = firstRow.querySelectorAll('.first-row');
+      return firstRowCells[column]?.querySelector('.cell');
+    } else {
+      const targetRow = rows[row];
+      const cells = targetRow.querySelector('div[style*="display: flex"]').querySelectorAll('.cell');
+      return cells[column];
+    }
   }
 
   boardContainer.addEventListener('click', async (event) => {
@@ -109,21 +127,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   
     const attack = await makeAttack(rowIndex, columnIndex);
-  
-    // Aplica visual de hit/miss
-    if (attack.hit) {
-      cell.classList.add('hit');
-    } else {
-      cell.classList.add('miss');
-    }
-  
-    // Exibe mensagem pro jogador com base no resultado
-    if (attack.message) {
-      if (attack.continueTurn) {
-        alert(`${attack.message}`);
+    
+    attack.playerAttack.hit ? cell.classList.add('hit') : cell.classList.add('miss');
+    
+    const botCell = getCellByPosition(opponentBoardContainer, attack.botAttack.row, attack.botAttack.column);
+    if (botCell) {
+      if (attack.botAttack.hit) {
+        botCell.classList.add('hit-ia');
       } else {
-        alert(`${attack.message}`);
+        botCell.classList.add('miss');
       }
+    }
+
+    if (attack.botAttack.destroyed) {
+      alert(`O robô destruiu seu ${attack.botAttack.shipType}!`);
     }
   });
   
@@ -136,6 +153,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-
-
-
