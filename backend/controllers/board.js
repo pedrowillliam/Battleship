@@ -101,7 +101,10 @@ const attack = (req, res) => {
     }
 
     try {
+        // Jogador ataca o oponente
         const playerResult = opponentBoard.placeBomb(row, column);
+
+        // IA ataca o jogador de forma inteligente
         const [botRow, botCol] = smartBotAttack(playerBoard);
         const botResult = playerBoard.placeBomb(botRow, botCol);
 
@@ -178,7 +181,6 @@ const getGameState = (_, res) => {
         });
     }
 };
-
 export {
     getBoard,
     resetBoard,
