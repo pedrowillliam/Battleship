@@ -1,4 +1,5 @@
 import Board from "../models/board.js";
+import { smartBotAttack } from "../robot/intelligentAttack.js";
 import opponentBoardMock from "../mock/opponentBoard.js";
 
 const playerBoard = new Board();
@@ -92,24 +93,33 @@ function initializeOpponentBoardWithMock() {
     }
 }
 
-const attack = (req, res) => {
+const attack = (req, res) => { 
     const { row, column } = req.body;
-    
+
     if (row === undefined || column === undefined) {
         return res.status(400).json({
             message: "As coordenadas do ataque (row, column) são obrigatórias!"
         });
     }
-    
+
     try {
-        const result = opponentBoard.placeBomb(row, column);
-            
+        const playerResult = opponentBoard.placeBomb(row, column);
+
+        const [botRow, botCol] = smartBotAttack(playerBoard);
+        const botResult = playerBoard.placeBomb(botRow, botCol);
+        console.log('bot: \n', botResult);
+
         res.status(200).json({
             playerAttack: {
-                ...result
+                row, column,
+                ...playerResult
             },
+            botAttack: {
+                row: botRow, column: botCol,
+                ...botResult
+            }
         });
-        
+
     } catch (error) {
         console.error(error);
         res.status(400).json({
@@ -155,14 +165,13 @@ const getGameState = (_, res) => {
                 score: opponentBoard.getScore(),
                 gridHits: opponentBoard.hits
             },
-
-            // 🚨 RETORNAR OS DADOS DO OPONENTE QUANDO IMPLEMENTAR A IA 🚨
-
-            // opponentStatus: {
-            //     hitsTotal: playerBoard.getHitsTotal(),
-            //     missesTotal: playerBoard.getMissesTotal(),
-            //     hits: playerBoard.getHits(),
-            // }
+            opponentStatus: {
+                fireHits: playerBoard.hitsTotal,
+                fireMisses: playerBoard.missesTotal,
+                totalAttacks: playerBoard.getAttackTotal(),
+                score: playerBoard.getScore(),
+                gridHits: playerBoard.hits
+            }
         });
     } catch (error) {
         console.error(error);

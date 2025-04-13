@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const error = await response.json().catch(() => ({ 
                     message: 'Erro desconhecido ao posicionar o navio.' 
                 }));
-                alert(error.message || 'Não foi possível posicionar o navio.');
+                alert(error.error || 'Não foi possível posicionar o navio.');
             }
         } catch (error) {
             console.error('Erro ao posicionar o navio:', error);
@@ -293,6 +293,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (element.robotInfo) element.robotInfo.style.display = 'flex';
                 alert('Jogo iniciado! Sua vez de atacar.');
+    
+                const boardContainer = document.querySelector('#board-component');
+                if (boardContainer) {
+                    boardContainer.style.opacity = "1";
+                    boardContainer.style.pointerEvents = "initial";
+                }
             } else {
                 const error = await response.json().catch(() => ({ 
                     message: 'Erro desconhecido ao iniciar o jogo.' 
