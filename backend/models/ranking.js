@@ -16,6 +16,7 @@ const createRankingView = async () => {
       FROM users u
       LEFT JOIN matches m ON u.id = m.user_id
       GROUP BY u.id
+      HAVING SUM(m.score) IS NOT NULL
       ORDER BY total_score DESC;
     `;
     try {

@@ -1,28 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ranking</title>
-    <link rel="stylesheet" href="../components/ranking.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ranking</title>
+  <link rel="stylesheet" href="../components/ranking.css">
 </head>
 <body>
-    <div class="container">
-        <div class="ranking-box">
-            <div class="ranking-title">RANKING</div>
-            <ul class="ranking-list">
-                <li><span class="posicao destaque">1</span><span class="nome">ellenmaria</span><span class="pontuacao">1230023</span></li>
-                <li><span class="posicao destaque">2</span><span class="nome">ellenmaria</span><span class="pontuacao">1230023</span></li>
-                <li><span class="posicao destaque">3</span><span class="nome">ellenmaria</span><span class="pontuacao">1230023</span></li>
-                <li><span class="posicao">4</span><span class="nome">ellenmaria</span><span class="pontuacao">1230023</span></li>
-                <li><span class="posicao">5</span><span class="nome">ellenmaria</span><span class="pontuacao">1230023</span></li>
-                <li><span class="posicao">6</span><span class="nome">ellenmaria</span><span class="pontuacao">1230023</span></li>
-                <li><span class="posicao">7</span><span class="nome">ellenmaria</span><span class="pontuacao">1230023</span></li>
-                <li><span class="posicao">8</span><span class="nome">ellenmaria</span><span class="pontuacao">1230023</span></li>
-                <li><span class="posicao">9</span><span class="nome">ellenmaria</span><span class="pontuacao">1230023</span></li>
-                <li><span class="posicao">10</span><span class="nome">ellenmaria</span><span class="pontuacao">1230023</span></li>  
-            </ul>
-        </div>
+  <div class="container">
+    <div class="ranking-box">
+      <div class="ranking-title">RANKING</div>
+      <ul class="ranking-list" id="rankingList">
+      </ul>
     </div>
+  </div>
+
+  <script type="module" src="../api/ranking.js"></script>
 </body>
 </html>

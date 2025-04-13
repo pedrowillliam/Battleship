@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('.login-form');
+    const rankingBtn = document.querySelector(".ranking-btn");
     
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -36,5 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Erro na conexão com o servidor.');
       }
     });
+
+    if (rankingBtn) {
+      rankingBtn.addEventListener("click", () => {
+          window.location.href = "../../../index.html"; 
+      });
+    }
   });
   
