@@ -104,20 +104,37 @@ const attack = (req, res) => {
 
     try {
         const playerResult = opponentBoard.placeBomb(row, column);
-
-        const [botRow, botCol] = smartBotAttack(playerBoard);
-        const botResult = playerBoard.placeBomb(botRow, botCol);
-        console.log('bot: \n', botResult);
+        
+        // Array para armazenar os ataques do bot
+        let botAttacks = [];
+        let botContinueAttacking = true;
+        
+        // Bot continua atacando enquanto acertar e não tiver destruído o navio
+        while (botContinueAttacking) {
+            const [botRow, botCol] = smartBotAttack(playerBoard);
+            const botResult = playerBoard.placeBomb(botRow, botCol);
+            
+            botAttacks.push({
+                row: botRow,
+                column: botCol,
+                ...botResult
+            });
+            
+            // Verifica se o bot deve continuar atacando (acertou, mas não destruiu)
+            botContinueAttacking = botResult.hit && !botResult.destroyed;
+            
+            console.log(`Bot atacou (${botRow}, ${botCol}): ${botResult.hit ? 'ACERTOU' : 'ERROU'}`);
+            if (botResult.destroyed) {
+                console.log(`Bot DESTRUIU um ${botResult.shipType}!`);
+            }
+        }
 
         res.status(200).json({
             playerAttack: {
                 row, column,
                 ...playerResult
             },
-            botAttack: {
-                row: botRow, column: botCol,
-                ...botResult
-            }
+            botAttacks: botAttacks
         });
 
     } catch (error) {
