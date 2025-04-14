@@ -1,6 +1,7 @@
 import opponentBoardMock from "../mock/opponentBoard.js";
 import Board from "../models/board.js";
 import { smartBotAttack } from "../robot/intelligentAttack.js";
+import { randomizeOpponentShips } from "../robot/randomShipPlacement.js";
 
 const playerBoard = new Board();
 let opponentBoard = new Board();
@@ -73,6 +74,11 @@ const addShip = (req, res) => {
         });
     }
 };
+
+// Função para inicializar o tabuleiro do oponente com navios posicionados aleatoriamente
+function initializeOpponentBoardRandomly() {
+    return randomizeOpponentShips(opponentBoard);
+}
 
 // 🚨 REMOVER FUNÇÃO DEPOIS QUE IMPLEMENTAR A IA 🚨
 function initializeOpponentBoardWithMock() {
@@ -193,7 +199,8 @@ const startGame = (_, res) => {
         playerBoard.gameOver = false;
         opponentBoard.gameOver = false;
         
-        const opponentResult = initializeOpponentBoardWithMock();
+        // Usar posicionamento aleatório em vez do mock
+        const opponentResult = initializeOpponentBoardRandomly();
         
         if (!opponentResult.success) {
             return res.status(500).json({
