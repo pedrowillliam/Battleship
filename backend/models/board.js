@@ -6,6 +6,7 @@ class Board {
         this.missesTotal = 0;
         this.attackTotal = 0;
         this.scoreTotal = 0;
+        this.gameOver = false; // Nova propriedade para controlar o estado do jogo
 
         this.shipConfigs = {
             'porta-avioes': { length: 6, limit: 1 },
@@ -222,10 +223,17 @@ class Board {
         this.missesTotal = 0;
         this.attackTotal = 0;
         this.scoreTotal = 0;
+        this.gameOver = false; // Reinicia o estado de fim de jogo
         this.hits = Array(10).fill(null).map(() => Array(10).fill(false));
         this.misses = Array(10).fill(null).map(() => Array(10).fill(false));
     }
 
+    // Método para verificar se todos os navios foram afundados
+    areAllShipsSunk() {
+        return this.ships.length > 0 && this.ships.every(ship => 
+            ship.positions.every(([row, col]) => this.hits[row][col])
+        );
+    }
 }
 
 export default Board;

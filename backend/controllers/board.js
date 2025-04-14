@@ -1,9 +1,16 @@
+import opponentBoardMock from "../mock/opponentBoard.js";
 import Board from "../models/board.js";
 import { smartBotAttack } from "../robot/intelligentAttack.js";
-import opponentBoardMock from "../mock/opponentBoard.js";
 
 const playerBoard = new Board();
 let opponentBoard = new Board();
+
+// Função para verificar se todos os navios foram afundados
+function checkAllShipsSunk(board) {
+    return board.ships.every(ship => 
+        ship.positions.every(([row, col]) => board.hits[row][col])
+    );
+}
 
 const getBoard = (_, res) => {
     try {
@@ -103,20 +110,69 @@ const attack = (req, res) => {
     }
 
     try {
-        const playerResult = opponentBoard.placeBomb(row, column);
+        // Verifica se o jogo já terminou
+        if (playerBoard.gameOver || opponentBoard.gameOver) {
+            return res.status(400).json({
+                message: "O jogo já terminou! Inicie um novo jogo."
+            });
+        }
 
-        const [botRow, botCol] = smartBotAttack(playerBoard);
-        const botResult = playerBoard.placeBomb(botRow, botCol);
-        console.log('bot: \n', botResult);
+        const playerResult = opponentBoard.placeBomb(row, column);
+        
+        // Verifica se o jogador ganhou
+        const playerWon = checkAllShipsSunk(opponentBoard);
+        if (playerWon) {
+            opponentBoard.gameOver = true;
+            playerBoard.gameOver = true;
+        }
+        
+        // Array para armazenar os ataques do bot
+        let botAttacks = [];
+        let botContinueAttacking = true;
+        let botWon = false;
+        
+        // Bot só ataca se o jogador não tiver ganhado ainda
+        if (!playerWon) {
+            // Bot continua atacando enquanto acertar e não tiver destruído o navio
+            while (botContinueAttacking) {
+                const [botRow, botCol] = smartBotAttack(playerBoard);
+                const botResult = playerBoard.placeBomb(botRow, botCol);
+                
+                botAttacks.push({
+                    row: botRow,
+                    column: botCol,
+                    ...botResult
+                });
+                
+                // Verifica se o bot deve continuar atacando (acertou, mas não destruiu)
+                botContinueAttacking = botResult.hit && !botResult.destroyed;
+                
+                console.log(`Bot atacou (${botRow}, ${botCol}): ${botResult.hit ? 'ACERTOU' : 'ERROU'}`);
+                if (botResult.destroyed) {
+                    console.log(`Bot DESTRUIU um ${botResult.shipType}!`);
+                }
+
+                // Verifica se o bot ganhou
+                botWon = checkAllShipsSunk(playerBoard);
+                if (botWon) {
+                    opponentBoard.gameOver = true;
+                    playerBoard.gameOver = true;
+                    break; // Interrompe os ataques do bot, pois ele já venceu
+                }
+            }
+        }
 
         res.status(200).json({
             playerAttack: {
                 row, column,
                 ...playerResult
             },
-            botAttack: {
-                row: botRow, column: botCol,
-                ...botResult
+            botAttacks: botAttacks,
+            gameState: {
+                isGameOver: playerWon || botWon,
+                winner: playerWon ? 'player' : (botWon ? 'bot' : null),
+                message: playerWon ? 'Você venceu! Todos os navios inimigos foram destruídos!' : 
+                        (botWon ? 'Você perdeu! Todos os seus navios foram destruídos!' : null)
             }
         });
 
@@ -132,6 +188,10 @@ const attack = (req, res) => {
 const startGame = (_, res) => {
     try {
         opponentBoard.resetBoard();
+        
+        // Resetar o estado de gameOver explicitamente
+        playerBoard.gameOver = false;
+        opponentBoard.gameOver = false;
         
         const opponentResult = initializeOpponentBoardWithMock();
         
@@ -157,6 +217,11 @@ const startGame = (_, res) => {
 
 const getGameState = (_, res) => {
     try {
+        // Verificar se algum jogador venceu
+        const playerWon = checkAllShipsSunk(opponentBoard);
+        const botWon = checkAllShipsSunk(playerBoard);
+        const isGameOver = playerWon || botWon;
+
         res.status(200).json({
             playerStatus: {
                 fireHits: opponentBoard.hitsTotal,
@@ -171,6 +236,12 @@ const getGameState = (_, res) => {
                 totalAttacks: playerBoard.getAttackTotal(),
                 score: playerBoard.getScore(),
                 gridHits: playerBoard.hits
+            },
+            gameState: {
+                isGameOver: isGameOver,
+                winner: playerWon ? 'player' : (botWon ? 'bot' : null),
+                message: playerWon ? 'Você venceu! Todos os navios inimigos foram destruídos!' : 
+                        (botWon ? 'Você perdeu! Todos os seus navios foram destruídos!' : null)
             }
         });
     } catch (error) {
@@ -182,4 +253,4 @@ const getGameState = (_, res) => {
     }
 };
 
-export { getBoard, resetBoard, addShip, getGameState, attack, startGame };
+export { addShip, attack, getBoard, getGameState, resetBoard, startGame };
