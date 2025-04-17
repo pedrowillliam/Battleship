@@ -71,6 +71,12 @@ function initializeOpponentBoardRandomly() {
     return randomizeOpponentShips(opponentBoard);
 }
 
+function checkAllShipsSunk(board) {
+    return board.ships.every(ship => 
+        ship.positions.every(([row, col]) => board.hits[row][col])
+    );
+}
+
 const attack = (req, res) => { 
     const { row, column } = req.body;
 
@@ -81,11 +87,25 @@ const attack = (req, res) => {
     }
 
     try {
+
+        if (playerBoard.gameOver || opponentBoard.gameOver) {
+            return res.status(400).json({
+                message: "O jogo já terminou! Inicie um novo jogo."
+            });
+        }
+
         const playerResult = opponentBoard.placeBomb(row, column);
+
+        const playerWon = checkAllShipsSunk(opponentBoard);
+        if (playerWon) {
+            opponentBoard.gameOver = true;
+            playerBoard.gameOver = true;
+        }
         
         // Array para armazenar os ataques do bot
         let botAttacks = [];
         let botContinueAttacking = true;
+        let botWon = false;
 
         const MAX_BOT_ATTACKS = 100; // Limite para evitar loop infinito
         let botAttackCount = 0;
@@ -109,6 +129,13 @@ const attack = (req, res) => {
             if (botResult.destroyed) {
                 console.log(`Bot DESTRUIU um ${botResult.shipType}!`);
             }
+
+            botWon = checkAllShipsSunk(playerBoard);
+            if (botWon) {
+                opponentBoard.gameOver = true;
+                playerBoard.gameOver = true;
+                break;
+            }
         }
 
         if (botAttackCount >= MAX_BOT_ATTACKS) {
@@ -120,7 +147,13 @@ const attack = (req, res) => {
                 row, column,
                 ...playerResult
             },
-            botAttacks
+            botAttacks, 
+            gameState: {
+                isGameOver: playerWon || botWon,
+                winner: playerWon ? 'player' : (botWon ? 'bot' : null),
+                message: playerWon ? 'Você venceu! Todos os navios inimigos foram destruídos!' : 
+                        (botWon ? 'Você perdeu! Todos os seus navios foram destruídos!' : null)
+            }
         });
 
     } catch (error) {
@@ -136,6 +169,9 @@ const attack = (req, res) => {
 const startGame = (_, res) => {
     try {
         opponentBoard.resetBoard();
+
+        playerBoard.gameOver = false;
+        opponentBoard.gameOver = false;
         
         const opponentResult = initializeOpponentBoardRandomly();
         
@@ -161,7 +197,10 @@ const startGame = (_, res) => {
 
 const getGameState = (_, res) => {
     try {
+        const playerWon = checkAllShipsSunk(opponentBoard);
+        const botWon = checkAllShipsSunk(playerBoard);
         res.status(200).json({
+            winner: playerWon ? 'player' : (botWon ? 'bot' : null),
             playerStatus: {
                 fireHits: opponentBoard.hitsTotal,
                 fireMisses: opponentBoard.missesTotal,

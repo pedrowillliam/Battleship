@@ -57,15 +57,15 @@ async function updateStats() {
     }
     const gameState = await response.json();
 
-    document.getElementById('user-shots').textContent = gameState.opponentStatus.totalAttacks;
-    document.getElementById('user-hits').textContent = gameState.opponentStatus.fireHits;
-    document.getElementById('user-misses').textContent = gameState.opponentStatus.fireMisses;
-    document.getElementById('user-score').textContent = gameState.opponentStatus.score;
+    document.getElementById('user-shots').textContent = gameState.playerStatus.totalAttacks;
+    document.getElementById('user-hits').textContent = gameState.playerStatus.fireHits;
+    document.getElementById('user-misses').textContent = gameState.playerStatus.fireMisses;
+    document.getElementById('user-score').textContent = gameState.playerStatus.score;
 
-    document.getElementById('opponent-shots').textContent = gameState.playerStatus.totalAttacks;
-    document.getElementById('opponent-hits').textContent = gameState.playerStatus.fireHits;
-    document.getElementById('opponent-misses').textContent = gameState.playerStatus.fireMisses;
-    document.getElementById('opponent-score').textContent = gameState.playerStatus.score;
+    document.getElementById('opponent-shots').textContent = gameState.opponentStatus.totalAttacks;
+    document.getElementById('opponent-hits').textContent = gameState.opponentStatus.fireHits;
+    document.getElementById('opponent-misses').textContent = gameState.opponentStatus.fireMisses;
+    document.getElementById('opponent-score').textContent = gameState.opponentStatus.score;
 
     return gameState;
 
@@ -127,6 +127,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     const attack = await makeAttack(rowIndex, columnIndex);
+
+    if (attack.gameState.winner) {
+      alert(attack.gameState.message);
+      boardContainer.style.pointerEvents = 'none';
+      opponentBoardContainer.style.pointerEvents = 'none';
+      boardContainer.style.opacity = "0.7";
+      opponentBoardContainer.style.opacity = "0.7";
+    }
 
     // Mostra resultado do ataque do jogador
     attack.playerAttack.hit ? cell.classList.add('hit') : cell.classList.add('miss');
