@@ -147,3 +147,23 @@ html {
 .score span {
   color: yellow;
 }
+
+#bot-waiting-message {
+  display: none; /* Inicialmente escondido */
+  text-align: center;
+  font-size: 1.5rem;
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  z-index: 1000; /* Garantir que a mensagem fique sobre outros elementos */
+}
+
+/* Classe para tornar o elemento visível */
+.bot-waiting-message.show {
+  display: block;
+}

@@ -1,3 +1,58 @@
+export let isPlayerTurn = true;
+
+export async function handleTurn(rowIndex, columnIndex, cell, getCellByPosition, opponentBoardContainer) {
+  if (!isPlayerTurn) return;
+
+  // Bloqueia ações do jogador imediatamente
+  isPlayerTurn = false;
+
+  const attack = await makeAttack(rowIndex, columnIndex);
+  if (!attack) {
+    isPlayerTurn = true;
+    return;
+  }
+
+  // Marcar a célula do jogador como 'hit' ou 'miss'
+  if (attack.playerAttack.hit) {
+    cell.classList.add('hit');
+
+    if (attack.playerAttack.destroyed) {
+      alert(`Você destruiu o ${attack.playerAttack.shipType} do robô!`);
+    } else {
+      alert('Você acertou!');
+    }
+  } else {
+    cell.classList.add('miss');
+  }
+
+  // Aguarda antes do bot jogar
+  showBotWaitingMessage(true);
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  // Executa o ataque do bot
+  const botAttack = attack.botAttack; // já vem do backend
+  const botCell = getCellByPosition(opponentBoardContainer, botAttack.row, botAttack.column);
+
+  if (botCell) {
+    if (botAttack.hit) {
+      botCell.classList.add('hit-ia');
+    } else {
+      botCell.classList.add('miss');
+    }
+  }
+
+  if (botAttack.destroyed) {
+    alert(`O robô destruiu seu ${botAttack.shipType}!`);
+  }
+
+  showBotWaitingMessage(false);
+  isPlayerTurn = true;
+}
+
+export function resetTurn() {
+  isPlayerTurn = true;
+}
+
 async function makeAttack(row, column) {
   try {
     const response = await fetch('http://localhost:3000/game/attack', {
@@ -74,6 +129,16 @@ async function updateStats() {
   }
 }
 
+// Função para mostrar/ocultar a mensagem de espera
+function showBotWaitingMessage(show) {
+  const message = document.getElementById('bot-waiting-message');
+  if (show) {
+    message.style.display = 'block'; // Exibe a mensagem
+  } else {
+    message.style.display = 'none'; // Esconde a mensagem
+  }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   const boardContainer = document.querySelector('#board-component');
   const opponentBoardContainer = document.querySelector('#board-component-two');
@@ -101,20 +166,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   boardContainer.addEventListener('click', async (event) => {
     const cell = event.target.closest('.cell');
     if (!cell) return;
-  
+
     const row = event.target.closest('.row');
     if (!row) return;
-  
+
     let rowIndex, columnIndex;
     const rowLetter = row.querySelector('p').textContent;
-  
+
     const letterToNumber = {
       'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4,
       'F': 5, 'G': 6, 'H': 7, 'I': 8, 'J': 9
     };
-  
+
     const firstRow = cell.closest('.first-row');
-  
+
     if (firstRow) {
       rowIndex = 0;
       const rowCells = row.querySelector('.row-cells');
@@ -125,29 +190,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       const cellsContainer = row.querySelector('div[style*="display: flex"]');
       columnIndex = Array.from(cellsContainer.children).indexOf(cell);
     }
-  
-    const attack = await makeAttack(rowIndex, columnIndex);
-    
-    attack.playerAttack.hit ? cell.classList.add('hit') : cell.classList.add('miss');
-    
-    const botCell = getCellByPosition(opponentBoardContainer, attack.botAttack.row, attack.botAttack.column);
-    if (botCell) {
-      if (attack.botAttack.hit) {
-        botCell.classList.add('hit-ia');
-      } else {
-        botCell.classList.add('miss');
-      }
-    }
 
-    if (attack.botAttack.destroyed) {
-      alert(`O robô destruiu seu ${attack.botAttack.shipType}!`);
-    }
+    await handleTurn(rowIndex, columnIndex, cell, getCellByPosition, opponentBoardContainer);
   });
-  
 
   const restartBtn = document.getElementById('restart-btn');
   if (restartBtn) {
     restartBtn.addEventListener('click', function () {
+      resetTurn();
       resetGame();
       restartGame();
     });
