@@ -136,14 +136,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       opponentBoardContainer.style.pointerEvents = 'none';
       boardContainer.style.opacity = "0.7";
       opponentBoardContainer.style.opacity = "0.7";
-
+      const match = await updateStats();
       // ⚡ salvar a partida no backend
       const partida = {
-        score: attack.gameState.playerStatus.score,
-        result: attack.gameState.winner === "player" ? "WIN" : "LOSS",
-        duration: attack.gameState.duration,
-        total_hits: attack.gameState.playerStatus.fireHits,
-        total_misses: attack.gameState.playerStatus.fireMisses
+        user_id: ...,
+        score: match.playerStatus.score,
+        result: match.winner === "player" ? "WIN" : "LOSS",
+        duration: 0,
+        total_hits: match.playerStatus.fireHits,
+        total_misses: match.playerStatus.fireMisses
       };
 
       await salvarPartida(partida);
