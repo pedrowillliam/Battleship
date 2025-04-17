@@ -187,3 +187,30 @@ html {
   background-color: rgba(76, 175, 80, 0.8); /* Transparência ajustada */
 }
 
+.game-over {
+  position: fixed;
+  top: 15%; /* 👉 mais pra cima */
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px 20px; /* 👉 menor */
+  font-size: 1.5rem; /* 👉 menor */
+  font-weight: bold;
+  color: white;
+  border-radius: 10px;
+  z-index: 1000;
+  opacity: 0.95;
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+  transition: opacity 0.5s ease;
+}
+
+.game-over.win {
+  background-color: #4caf50;
+}
+
+.game-over.lose {
+  background-color: #e53935;
+}
+
+.hidden {
+  display: none;
+}

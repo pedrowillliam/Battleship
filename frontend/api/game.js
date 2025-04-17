@@ -169,7 +169,9 @@ if (Array.isArray(attack.playerAttacks)) {
       }
 
       if (playerAttack.destroyed) {
-        showNotification(`🎯 Você destruiu o ${playerAttack.shipType} do robô!`);
+        setTimeout(() => {
+          showNotification(`🎯 Você destruiu o ${playerAttack.shipType} do robô!`);
+        }, 1000); // 1000 ms = 1 segundo
       }
     }
   }
@@ -177,7 +179,15 @@ if (Array.isArray(attack.playerAttacks)) {
 
 // ✅ Se o jogo terminou
 if (attack.gameState?.winner) {
-  alert(attack.gameState.message);
+  const messageBox = document.getElementById('game-over-message');
+  messageBox.textContent = attack.gameState.message;
+  
+  messageBox.classList.remove('hidden');
+  messageBox.classList.add(
+    attack.gameState.winner === 'player' ? 'win' : 'lose'
+  );
+
+  // Desativa tabuleiros
   boardContainer.style.pointerEvents = 'none';
   opponentBoardContainer.style.pointerEvents = 'none';
   boardContainer.style.opacity = "0.7";
