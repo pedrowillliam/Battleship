@@ -121,46 +121,48 @@ class Board {
         if (row < 0 || row >= 10 || column < 0 || column >= 10) {
             throw new Error('Coordenadas inválidas. Escolha valores entre 0 e 9.');
         }
-
-        console.log(`Atirou em (${row}, ${column})`);        
-
+    
+        console.log(`Atirou em (${row}, ${column})`);
+    
         if (this.hits[row][column] || this.misses[row][column]) {
             throw new Error('Esta célula já foi bombardeada anteriormente.');
         }
-
+    
         if (this.grid[row][column] !== null) {
             this.hits[row][column] = true;
             this.hitsTotal++;
-
+    
             const shipType = this.grid[row][column];
             console.log(`Acertou um navio do tipo: ${shipType}`);
-            
-            const shipIndex = this.ships.findIndex(s => 
-                s.type === shipType && 
+    
+            const shipIndex = this.ships.findIndex(s =>
+                s.type === shipType &&
                 s.positions.some(p => p[0] === row && p[1] === column)
             );
-
+    
             if (shipIndex === -1) {
                 console.error(`Erro: Navio não encontrado na posição (${row}, ${column})`);
                 return {
                     hit: true,
+                    continueTurn: true, // mantém turno porque foi acerto
                     message: `Você acertou um ${shipType}!`,
                     shipType,
                     destroyed: false
                 };
             }
-
+    
             const ship = this.ships[shipIndex];
-            
+    
             const allPositionsHit = ship.positions.every(([r, c]) => {
                 const isHit = this.hits[r][c];
                 console.log(`Posição (${r}, ${c}) atingida: ${isHit}`);
                 return isHit;
             });
-
+    
             if (allPositionsHit) {
                 return {
                     hit: true,
+                    continueTurn: true, // ainda é turno do player, ele destruiu
                     message: `Você acertou e destruiu um ${shipType}!`,
                     shipType,
                     destroyed: true
@@ -168,6 +170,7 @@ class Board {
             } else {
                 return {
                     hit: true,
+                    continueTurn: true, // acertou, então continua o turno
                     message: `Você acertou um ${shipType}!`,
                     shipType,
                     destroyed: false
@@ -178,7 +181,7 @@ class Board {
             this.missesTotal++;
             return {
                 hit: false,
-                continueTurn: false,
+                continueTurn: false, // errou, passa o turno
                 message: 'Você errou o tiro. Vez do oponente!',
             };
         }

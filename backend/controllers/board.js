@@ -71,7 +71,9 @@ function initializeOpponentBoardRandomly() {
     return randomizeOpponentShips(opponentBoard);
 }
 
-const attack = (req, res) => { 
+let isPlayerTurn = true; 
+
+const attack = (req, res) => {
     const { row, column } = req.body;
 
     if (row === undefined || column === undefined) {
@@ -80,46 +82,78 @@ const attack = (req, res) => {
         });
     }
 
+    if (!isPlayerTurn) {
+        return res.status(403).json({
+            message: "Ainda não é sua vez!"
+        });
+    }
+
     try {
-        const playerResult = opponentBoard.placeBomb(row, column);
-        
-        // Array para armazenar os ataques do bot
-        let botAttacks = [];
-        let botContinueAttacking = true;
+        let playerAttacks = [];
+        let continuePlayer = true;
+        let currentRow = row;
+        let currentColumn = column;
 
-        const MAX_BOT_ATTACKS = 100; // Limite para evitar loop infinito
-        let botAttackCount = 0;
+        // Enquanto o jogador acertar, ele continua
+        while (continuePlayer) {
+            const result = opponentBoard.placeBomb(currentRow, currentColumn);
 
-        // Bot continua atacando enquanto acertar
-        while (botContinueAttacking && botAttackCount < MAX_BOT_ATTACKS) {
-            const [botRow, botCol] = smartBotAttack(playerBoard);
-            const botResult = playerBoard.placeBomb(botRow, botCol);
-
-            botAttacks.push({
-                row: botRow,
-                column: botCol,
-                ...botResult
+            playerAttacks.push({
+                row: currentRow,
+                column: currentColumn,
+                ...result
             });
 
-            // Agora o bot continua atacando enquanto acertar, independente de destruir
-            botContinueAttacking = botResult.hit;
-            botAttackCount++;
+            console.log(`Jogador atacou (${currentRow}, ${currentColumn}): ${result.hit ? 'ACERTOU' : 'ERROU'}`);
 
-            console.log(`Bot atacou (${botRow}, ${botCol}): ${botResult.hit ? 'ACERTOU' : 'ERROU'}`);
-            if (botResult.destroyed) {
-                console.log(`Bot DESTRUIU um ${botResult.shipType}!`);
+            if (result.destroyed) {
+                console.log(`Jogador DESTRUIU um ${result.shipType}!`);
+            }
+
+            if (!result.hit) {
+                continuePlayer = false;
+                isPlayerTurn = false;
+            } else {
+                // Aqui, para só 1 ataque por vez no front — remova isso se quiser encadear no front
+                break;
             }
         }
 
-        if (botAttackCount >= MAX_BOT_ATTACKS) {
-            console.warn("⚠️ Limite máximo de ataques do bot atingido! Possível loop evitado.");
+        // Bot joga apenas se o jogador errar
+        let botAttacks = [];
+        if (!isPlayerTurn) {
+            let botContinueAttacking = true;
+            const MAX_BOT_ATTACKS = 100;
+            let botAttackCount = 0;
+
+            while (botContinueAttacking && botAttackCount < MAX_BOT_ATTACKS) {
+                const [botRow, botCol] = smartBotAttack(playerBoard);
+                const botResult = playerBoard.placeBomb(botRow, botCol);
+
+                botAttacks.push({
+                    row: botRow,
+                    column: botCol,
+                    ...botResult
+                });
+
+                console.log(`Bot atacou (${botRow}, ${botCol}): ${botResult.hit ? 'ACERTOU' : 'ERROU'}`);
+                if (botResult.destroyed) {
+                    console.log(`Bot DESTRUIU um ${botResult.shipType}!`);
+                }
+
+                botContinueAttacking = botResult.hit;
+                botAttackCount++;
+            }
+
+            isPlayerTurn = true; // volta pro jogador
+        }
+
+        if (botAttacks.length === 0) {
+            console.log("Vez do jogador continua!");
         }
 
         res.status(200).json({
-            playerAttack: {
-                row, column,
-                ...playerResult
-            },
+            playerAttacks,
             botAttacks
         });
 
