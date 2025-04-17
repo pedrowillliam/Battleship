@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const match = await updateStats();
       // ⚡ salvar a partida no backend
       const partida = {
-        user_id: ...,
+        user_id: localStorage.getItem('user_id'),
         score: match.playerStatus.score,
         result: match.winner === "player" ? "WIN" : "LOSS",
         duration: 0,
