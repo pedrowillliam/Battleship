@@ -193,6 +193,30 @@ if (attack.gameState?.winner) {
   opponentBoardContainer.style.pointerEvents = 'none';
   boardContainer.style.opacity = "0.7";
   opponentBoardContainer.style.opacity = "0.7";
+
+  try {
+    const userId = localStorage.getItem('user_id');
+    if (!userId) {
+      throw new Error('Usuário não identificado (user_id não encontrado)');
+    }
+
+    const match = await updateStats();
+    const partida = {
+      user_id: userId,
+      score: match.playerStatus.score,
+      result: attack.gameState.winner === "player" ? "WIN" : "LOSS",
+      duration: Math.floor((Date.now() - window.gameStartTime) / 1000),
+      total_hits: match.playerStatus.fireHits,
+      total_misses: match.playerStatus.fireMisses
+    };
+
+    console.log('Salvando partida:', partida); // Para debug
+    await salvarPartida(partida);
+    showNotification('Partida salva no histórico!');
+  } catch (error) {
+    console.error('Erro ao salvar partida:', error);
+    showNotification('Erro ao salvar histórico: ' + error.message, 5000);
+  }
 }
 
 // ⛔ Se o bot vai jogar, desativa o tabuleiro e mostra a mensagem
