@@ -82,6 +82,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
+  function showNotification(message, duration = 3000) {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.style.display = 'block';
+    notification.style.opacity = '1';
+  
+    setTimeout(() => {
+      notification.style.opacity = '0';
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 300);
+    }, duration);
+  }
+
   boardContainer.style.opacity = "0.7";
   boardContainer.style.pointerEvents = 'none';
 
@@ -98,23 +112,35 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
+  function disablePlayerBoard() {
+    boardContainer.style.pointerEvents = 'none';
+    boardContainer.style.opacity = '0.7';
+    document.getElementById('bot-waiting-message').style.display = 'block';
+  }
+
+  function enablePlayerBoard() {
+    boardContainer.style.pointerEvents = 'auto';
+    boardContainer.style.opacity = '1';
+    document.getElementById('bot-waiting-message').style.display = 'none';
+  }
+
   boardContainer.addEventListener('click', async (event) => {
     const cell = event.target.closest('.cell');
     if (!cell) return;
-
+  
     const row = event.target.closest('.row');
     if (!row) return;
-
+  
     let rowIndex, columnIndex;
     const rowLetter = row.querySelector('p').textContent;
-
+  
     const letterToNumber = {
       'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4,
       'F': 5, 'G': 6, 'H': 7, 'I': 8, 'J': 9
     };
-
+  
     const firstRow = cell.closest('.first-row');
-
+  
     if (firstRow) {
       rowIndex = 0;
       const rowCells = row.querySelector('.row-cells');
@@ -125,40 +151,71 @@ document.addEventListener('DOMContentLoaded', async () => {
       const cellsContainer = row.querySelector('div[style*="display: flex"]');
       columnIndex = Array.from(cellsContainer.children).indexOf(cell);
     }
-
+  
     const attack = await makeAttack(rowIndex, columnIndex);
+  
+    // 🎯 Mostra resultado do ataque do jogador
+    let acertou = false;
+if (Array.isArray(attack.playerAttacks)) {
+  for (let i = 0; i < attack.playerAttacks.length; i++) {
+    const playerAttack = attack.playerAttacks[i];
+    const cell = getCellByPosition(boardContainer, playerAttack.row, playerAttack.column);
+    if (cell) {
+      if (playerAttack.hit) {
+        cell.classList.add('hit');
+        acertou = true;
+      } else {
+        cell.classList.add('miss');
+      }
 
-    if (attack.gameState.winner) {
-      alert(attack.gameState.message);
-      boardContainer.style.pointerEvents = 'none';
-      opponentBoardContainer.style.pointerEvents = 'none';
-      boardContainer.style.opacity = "0.7";
-      opponentBoardContainer.style.opacity = "0.7";
-    }
-
-    // Mostra resultado do ataque do jogador
-    attack.playerAttack.hit ? cell.classList.add('hit') : cell.classList.add('miss');
-
-    // Trata todos os ataques do bot (pode ser múltiplos)
-    if (Array.isArray(attack.botAttacks)) {
-      for (let i = 0; i < attack.botAttacks.length; i++) {
-        const botAttack = attack.botAttacks[i];
-    
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Delay de 1segundo
-        const botCell = getCellByPosition(opponentBoardContainer, botAttack.row, botAttack.column);
-        if (botCell) {
-          if (botAttack.hit) {
-            botCell.classList.add('hit-ia');
-          } else {
-            botCell.classList.add('miss');
-          }
-        }
-
-        if (botAttack.destroyed) {
-          alert(`O robô destruiu seu ${botAttack.shipType}!`);
-        }
+      if (playerAttack.destroyed) {
+        showNotification(`🎯 Você destruiu o ${playerAttack.shipType} do robô!`);
       }
     }
+  }
+}
+
+// ✅ Se o jogo terminou
+if (attack.gameState?.winner) {
+  alert(attack.gameState.message);
+  boardContainer.style.pointerEvents = 'none';
+  opponentBoardContainer.style.pointerEvents = 'none';
+  boardContainer.style.opacity = "0.7";
+  opponentBoardContainer.style.opacity = "0.7";
+}
+
+// ⛔ Se o bot vai jogar, desativa o tabuleiro e mostra a mensagem
+if (Array.isArray(attack.botAttacks) && attack.botAttacks.length > 0) {
+  disablePlayerBoard();
+}
+
+// 🤖 Mostra resultado dos ataques do bot
+if (Array.isArray(attack.botAttacks)) {
+  for (let i = 0; i < attack.botAttacks.length; i++) {
+    const botAttack = attack.botAttacks[i];
+
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Delay de 1 segundo
+    const botCell = getCellByPosition(opponentBoardContainer, botAttack.row, botAttack.column);
+    if (botCell) {
+      if (botAttack.hit) {
+        botCell.classList.add('hit-ia');
+      } else {
+        botCell.classList.add('miss');
+      }
+    }
+
+    if (botAttack.destroyed) {
+      showNotification(`💥 O robô destruiu seu ${botAttack.shipType}!`);
+    }
+  }
+}
+
+// ✅ Alerta se acertou e o bot não jogou
+if (acertou && (!attack.botAttacks || attack.botAttacks.length === 0)) {
+  showNotification('🎯 Você acertou, pode jogar novamente!');
+}
+
+enablePlayerBoard(); // ✅ Reativa tabuleiro após o turno do bot // ✅ Reativa tabuleiro após o turno do bot
   });
 
   const restartBtn = document.getElementById('restart-btn');
@@ -169,3 +226,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 });
+

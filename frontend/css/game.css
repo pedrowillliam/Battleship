@@ -147,3 +147,43 @@ html {
 .score span {
   color: yellow;
 }
+
+#bot-waiting-message {
+  display: none; /* Inicialmente escondido */
+  text-align: center;
+  font-size: 1.5rem;
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  z-index: 1000; /* Garantir que a mensagem fique sobre outros elementos */
+}
+
+/* Classe para tornar o elemento visível */
+.bot-waiting-message.show {
+  display: block;
+}
+
+.notification {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 10px; /* Aumentando o padding para dar um pouco mais de espaço */
+  border-radius: 10px; /* Bordas mais arredondadas */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra mais suave */
+  font-weight: bold;
+  font-size: 1.6rem; /* Aumentando o tamanho da fonte */
+  z-index: 9999;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+  background-color: rgba(76, 175, 80, 0.8); /* Transparência ajustada */
+}
+
