@@ -57,15 +57,15 @@ async function updateStats() {
     }
     const gameState = await response.json();
 
-    document.getElementById('user-shots').textContent = gameState.opponentStatus.totalAttacks;
-    document.getElementById('user-hits').textContent = gameState.opponentStatus.fireHits;
-    document.getElementById('user-misses').textContent = gameState.opponentStatus.fireMisses;
-    document.getElementById('user-score').textContent = gameState.opponentStatus.score;
+    document.getElementById('user-shots').textContent = gameState.playerStatus.totalAttacks;
+    document.getElementById('user-hits').textContent = gameState.playerStatus.fireHits;
+    document.getElementById('user-misses').textContent = gameState.playerStatus.fireMisses;
+    document.getElementById('user-score').textContent = gameState.playerStatus.score;
 
-    document.getElementById('opponent-shots').textContent = gameState.playerStatus.totalAttacks;
-    document.getElementById('opponent-hits').textContent = gameState.playerStatus.fireHits;
-    document.getElementById('opponent-misses').textContent = gameState.playerStatus.fireMisses;
-    document.getElementById('opponent-score').textContent = gameState.playerStatus.score;
+    document.getElementById('opponent-shots').textContent = gameState.opponentStatus.totalAttacks;
+    document.getElementById('opponent-hits').textContent = gameState.opponentStatus.fireHits;
+    document.getElementById('opponent-misses').textContent = gameState.opponentStatus.fireMisses;
+    document.getElementById('opponent-score').textContent = gameState.opponentStatus.score;
 
     return gameState;
 
@@ -156,67 +156,66 @@ document.addEventListener('DOMContentLoaded', async () => {
   
     // 🎯 Mostra resultado do ataque do jogador
     let acertou = false;
-    if (Array.isArray(attack.playerAttacks)) {
-      for (let i = 0; i < attack.playerAttacks.length; i++) {
-        const playerAttack = attack.playerAttacks[i];
-        const cell = getCellByPosition(boardContainer, playerAttack.row, playerAttack.column);
-        if (cell) {
-          if (playerAttack.hit) {
-            cell.classList.add('hit');
-            acertou = true;
-          } else {
-            cell.classList.add('miss');
-          }
+if (Array.isArray(attack.playerAttacks)) {
+  for (let i = 0; i < attack.playerAttacks.length; i++) {
+    const playerAttack = attack.playerAttacks[i];
+    const cell = getCellByPosition(boardContainer, playerAttack.row, playerAttack.column);
+    if (cell) {
+      if (playerAttack.hit) {
+        cell.classList.add('hit');
+        acertou = true;
+      } else {
+        cell.classList.add('miss');
+      }
 
-          if (playerAttack.destroyed) {
-            showNotification(`🚢 Você destruiu um ${playerAttack.shipType}!`);
-          }
-        }
+      if (playerAttack.destroyed) {
+        showNotification(`🎯 Você destruiu o ${playerAttack.shipType} do robô!`);
+      }
+    }
+  }
+}
+
+// ✅ Se o jogo terminou
+if (attack.gameState?.winner) {
+  alert(attack.gameState.message);
+  boardContainer.style.pointerEvents = 'none';
+  opponentBoardContainer.style.pointerEvents = 'none';
+  boardContainer.style.opacity = "0.7";
+  opponentBoardContainer.style.opacity = "0.7";
+}
+
+// ⛔ Se o bot vai jogar, desativa o tabuleiro e mostra a mensagem
+if (Array.isArray(attack.botAttacks) && attack.botAttacks.length > 0) {
+  disablePlayerBoard();
+}
+
+// 🤖 Mostra resultado dos ataques do bot
+if (Array.isArray(attack.botAttacks)) {
+  for (let i = 0; i < attack.botAttacks.length; i++) {
+    const botAttack = attack.botAttacks[i];
+
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Delay de 1 segundo
+    const botCell = getCellByPosition(opponentBoardContainer, botAttack.row, botAttack.column);
+    if (botCell) {
+      if (botAttack.hit) {
+        botCell.classList.add('hit-ia');
+      } else {
+        botCell.classList.add('miss');
       }
     }
 
-    // Se o bot vai jogar, desativa o tabuleiro e exibe a mensagem
-    if (Array.isArray(attack.botAttacks) && attack.botAttacks.length > 0) {
-      disablePlayerBoard();
+    if (botAttack.destroyed) {
+      showNotification(`💥 O robô destruiu seu ${botAttack.shipType}!`);
     }
+  }
+}
 
-    // 🤖 Mostra resultado dos ataques do bot
-    if (Array.isArray(attack.botAttacks)) {
-      for (let i = 0; i < attack.botAttacks.length; i++) {
-        const botAttack = attack.botAttacks[i];
+// ✅ Alerta se acertou e o bot não jogou
+if (acertou && (!attack.botAttacks || attack.botAttacks.length === 0)) {
+  showNotification('🎯 Você acertou, pode jogar novamente!');
+}
 
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Delay de 1 segundo
-        const botCell = getCellByPosition(opponentBoardContainer, botAttack.row, botAttack.column);
-        if (botCell) {
-          if (botAttack.hit) {
-            botCell.classList.add('hit-ia');
-          } else {
-            botCell.classList.add('miss');
-          }
-        }
-
-        if (botAttack.destroyed) {
-          showNotification(`💥 O robô destruiu seu ${botAttack.shipType}!`);
-        }
-      }
-    }
-
-    // ✅ Alerta se acertou e o bot não jogou
-    if (acertou && (!attack.botAttacks || attack.botAttacks.length === 0)) {
-      showNotification('🎯 Você acertou, pode jogar novamente!');
-    }
-
-    // ✅ Alerta se o jogador destruiu um navio do robô
-    if (Array.isArray(attack.playerAttacks)) {
-      for (let i = 0; i < attack.playerAttacks.length; i++) {
-        const playerAttack = attack.playerAttacks[i];
-        if (playerAttack.destroyed) {
-          // Adicionando o tipo do navio destruído
-          showNotification(`🎯 Você destruiu o ${playerAttack.shipType} do robô!`);
-        }
-      }
-    }
-    enablePlayerBoard(); // ✅ Reativa tabuleiro após o turno do bot
+enablePlayerBoard(); // ✅ Reativa tabuleiro após o turno do bot // ✅ Reativa tabuleiro após o turno do bot
   });
 
   const restartBtn = document.getElementById('restart-btn');

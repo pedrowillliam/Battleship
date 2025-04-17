@@ -71,7 +71,13 @@ function initializeOpponentBoardRandomly() {
     return randomizeOpponentShips(opponentBoard);
 }
 
-let isPlayerTurn = true; 
+let isPlayerTurn = true;
+
+function checkAllShipsSunk(board) {
+    return board.ships.every(ship =>
+        ship.positions.every(([row, col]) => board.hits[row][col])
+    );
+}
 
 const attack = (req, res) => {
     const { row, column } = req.body;
@@ -89,10 +95,18 @@ const attack = (req, res) => {
     }
 
     try {
+        if (playerBoard.gameOver || opponentBoard.gameOver) {
+            return res.status(400).json({
+                message: "O jogo já terminou! Inicie um novo jogo."
+            });
+        }
+
         let playerAttacks = [];
         let continuePlayer = true;
         let currentRow = row;
         let currentColumn = column;
+        let playerWon = false;
+        let botWon = false;
 
         // Enquanto o jogador acertar, ele continua
         while (continuePlayer) {
@@ -110,18 +124,24 @@ const attack = (req, res) => {
                 console.log(`Jogador DESTRUIU um ${result.shipType}!`);
             }
 
+            playerWon = checkAllShipsSunk(opponentBoard);
+            if (playerWon) {
+                opponentBoard.gameOver = true;
+                playerBoard.gameOver = true;
+                break;
+            }
+
             if (!result.hit) {
                 continuePlayer = false;
                 isPlayerTurn = false;
             } else {
-                // Aqui, para só 1 ataque por vez no front — remova isso se quiser encadear no front
-                break;
+                break; // remove isso para múltiplos tiros seguidos
             }
         }
 
-        // Bot joga apenas se o jogador errar
+        // Bot joga apenas se o jogador errar e o jogo não acabou
         let botAttacks = [];
-        if (!isPlayerTurn) {
+        if (!isPlayerTurn && !playerWon) {
             let botContinueAttacking = true;
             const MAX_BOT_ATTACKS = 100;
             let botAttackCount = 0;
@@ -141,6 +161,13 @@ const attack = (req, res) => {
                     console.log(`Bot DESTRUIU um ${botResult.shipType}!`);
                 }
 
+                botWon = checkAllShipsSunk(playerBoard);
+                if (botWon) {
+                    opponentBoard.gameOver = true;
+                    playerBoard.gameOver = true;
+                    break;
+                }
+
                 botContinueAttacking = botResult.hit;
                 botAttackCount++;
             }
@@ -154,7 +181,13 @@ const attack = (req, res) => {
 
         res.status(200).json({
             playerAttacks,
-            botAttacks
+            botAttacks,
+            gameState: {
+                isGameOver: playerWon || botWon,
+                winner: playerWon ? 'player' : (botWon ? 'bot' : null),
+                message: playerWon ? 'Você venceu! Todos os navios inimigos foram destruídos!' :
+                         (botWon ? 'Você perdeu! Todos os seus navios foram destruídos!' : null)
+            }
         });
 
     } catch (error) {
@@ -170,6 +203,9 @@ const attack = (req, res) => {
 const startGame = (_, res) => {
     try {
         opponentBoard.resetBoard();
+
+        playerBoard.gameOver = false;
+        opponentBoard.gameOver = false;
         
         const opponentResult = initializeOpponentBoardRandomly();
         
@@ -195,7 +231,10 @@ const startGame = (_, res) => {
 
 const getGameState = (_, res) => {
     try {
+        const playerWon = checkAllShipsSunk(opponentBoard);
+        const botWon = checkAllShipsSunk(playerBoard);
         res.status(200).json({
+            winner: playerWon ? 'player' : (botWon ? 'bot' : null),
             playerStatus: {
                 fireHits: opponentBoard.hitsTotal,
                 fireMisses: opponentBoard.missesTotal,

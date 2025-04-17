@@ -6,6 +6,7 @@ class Board {
         this.missesTotal = 0;
         this.attackTotal = 0;
         this.scoreTotal = 0;
+        this.gameOver = false;
 
         this.shipConfigs = {
             'porta-avioes': { length: 6, limit: 1 },
@@ -225,6 +226,7 @@ class Board {
         this.missesTotal = 0;
         this.attackTotal = 0;
         this.scoreTotal = 0;
+        this.gameOver = false;
         this.hits = Array(10).fill(null).map(() => Array(10).fill(false));
         this.misses = Array(10).fill(null).map(() => Array(10).fill(false));
     }
