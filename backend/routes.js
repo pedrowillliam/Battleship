@@ -11,11 +11,11 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 // Match Routes
-router.post("/matches", authMiddleware, createMatch);
-router.get("/matches", authMiddleware, getAllMatches);
-router.get("/matches/:id", authMiddleware, getMatchById);
-router.put("/matches/:id", authMiddleware, updateMatchById);
-router.delete("/matches/:id", authMiddleware, deleteMatchById);
+router.post("/matches", createMatch);
+router.get("/matches", getAllMatches);
+router.get("/matches/:id", getMatchById);
+router.put("/matches/:id", updateMatchById);
+router.delete("/matches/:id", deleteMatchById);
 
 
 // Board Routes
