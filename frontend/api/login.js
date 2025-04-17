@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         alert(data.message);
         console.log("Registro realizado com sucesso", data);
         localStorage.setItem("username", username);
+        localStorage.setItem("user_id", data.user.id);
         window.location.href = "../../battleship/game.html";
       } else {
         alert(data.message || "Erro no login!");
