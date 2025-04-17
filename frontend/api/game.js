@@ -1,3 +1,5 @@
+import { salvarPartida } from "./matches.js";
+
 async function makeAttack(row, column) {
   try {
     const response = await fetch('http://localhost:3000/game/attack', {
@@ -134,7 +136,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       opponentBoardContainer.style.pointerEvents = 'none';
       boardContainer.style.opacity = "0.7";
       opponentBoardContainer.style.opacity = "0.7";
+
+      // ⚡ salvar a partida no backend
+      const partida = {
+        score: attack.gameState.playerStatus.score,
+        result: attack.gameState.winner === "player" ? "WIN" : "LOSS",
+        duration: attack.gameState.duration,
+        total_hits: attack.gameState.playerStatus.fireHits,
+        total_misses: attack.gameState.playerStatus.fireMisses
+      };
+
+      await salvarPartida(partida);
+
     }
+
 
     // Mostra resultado do ataque do jogador
     attack.playerAttack.hit ? cell.classList.add('hit') : cell.classList.add('miss');

@@ -5,6 +5,8 @@ import { createTable as createUserTable } from "./models/user.js";
 import { createTable as createMatchTable } from "./models/match.js"; // Agora importando corretamente a função
 import { createRankingView } from "./models/ranking.js"; 
 import { pool } from "./config/database.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 app.use(cors());
