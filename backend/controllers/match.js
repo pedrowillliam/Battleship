@@ -2,7 +2,10 @@ import { insertMatch, selectAllMatches, selectMatchById, updateMatch, deleteMatc
 
 export const createMatch = async (req, res) => {
   try {
-    const match = await insertMatch(...Object.values(req.body));
+    const userId = req.userId;
+    const { score, result, duration, total_hits, total_misses } = req.body;
+
+    const match = await insertMatch(userId, score, result, duration, total_hits, total_misses);
     res.status(201).json(match);
   } catch (error) {
     res.status(500).json({ message: error.message });

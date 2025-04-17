@@ -3,6 +3,7 @@ import { registerUser, loginUser } from "./controllers/user.js";
 import { createMatch, getAllMatches, getMatchById, updateMatchById, deleteMatchById } from "./controllers/match.js";
 import { getBoard, resetBoard, addShip, attack, getGameState, startGame } from "./controllers/board.js";
 import { fetchRanking } from "./controllers/ranking.js";
+import authMiddleware from "./middleware/auth.js";
 
 const router = new Router();
 
@@ -11,11 +12,12 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 // Match Routes
-router.post("/matches", createMatch);
-router.get("/matches", getAllMatches);
-router.get("/matches/:id", getMatchById);
-router.put("/matches/:id", updateMatchById);
-router.delete("/matches/:id", deleteMatchById);
+router.post("/matches", authMiddleware, createMatch);
+router.get("/matches", authMiddleware, getAllMatches);
+router.get("/matches/:id", authMiddleware, getMatchById);
+router.put("/matches/:id", authMiddleware, updateMatchById);
+router.delete("/matches/:id", authMiddleware, deleteMatchById);
+
 
 // Board Routes
 router.get("/board", getBoard);
