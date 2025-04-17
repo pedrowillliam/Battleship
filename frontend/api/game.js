@@ -5,7 +5,7 @@ async function makeAttack(row, column) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ row: row, column: column }),
+      body: JSON.stringify({ row, column }),
     });
 
     const data = await response.json();
@@ -101,20 +101,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   boardContainer.addEventListener('click', async (event) => {
     const cell = event.target.closest('.cell');
     if (!cell) return;
-  
+
     const row = event.target.closest('.row');
     if (!row) return;
-  
+
     let rowIndex, columnIndex;
     const rowLetter = row.querySelector('p').textContent;
-  
+
     const letterToNumber = {
       'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4,
       'F': 5, 'G': 6, 'H': 7, 'I': 8, 'J': 9
     };
-  
+
     const firstRow = cell.closest('.first-row');
-  
+
     if (firstRow) {
       rowIndex = 0;
       const rowCells = row.querySelector('.row-cells');
@@ -125,25 +125,33 @@ document.addEventListener('DOMContentLoaded', async () => {
       const cellsContainer = row.querySelector('div[style*="display: flex"]');
       columnIndex = Array.from(cellsContainer.children).indexOf(cell);
     }
-  
+
     const attack = await makeAttack(rowIndex, columnIndex);
-    
+
+    // Mostra resultado do ataque do jogador
     attack.playerAttack.hit ? cell.classList.add('hit') : cell.classList.add('miss');
+
+    // Trata todos os ataques do bot (pode ser múltiplos)
+    if (Array.isArray(attack.botAttacks)) {
+      for (let i = 0; i < attack.botAttacks.length; i++) {
+        const botAttack = attack.botAttacks[i];
     
-    const botCell = getCellByPosition(opponentBoardContainer, attack.botAttack.row, attack.botAttack.column);
-    if (botCell) {
-      if (attack.botAttack.hit) {
-        botCell.classList.add('hit-ia');
-      } else {
-        botCell.classList.add('miss');
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Delay de 1segundo
+        const botCell = getCellByPosition(opponentBoardContainer, botAttack.row, botAttack.column);
+        if (botCell) {
+          if (botAttack.hit) {
+            botCell.classList.add('hit-ia');
+          } else {
+            botCell.classList.add('miss');
+          }
+        }
+
+        if (botAttack.destroyed) {
+          alert(`O robô destruiu seu ${botAttack.shipType}!`);
+        }
       }
     }
-
-    if (attack.botAttack.destroyed) {
-      alert(`O robô destruiu seu ${attack.botAttack.shipType}!`);
-    }
   });
-  
 
   const restartBtn = document.getElementById('restart-btn');
   if (restartBtn) {
