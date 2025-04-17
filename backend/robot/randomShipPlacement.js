@@ -1,7 +1,5 @@
-// Função para posicionar aleatoriamente os navios da IA no tabuleiro
 export function randomizeOpponentShips(board) {
     try {
-      // Configuração dos navios a serem posicionados
       const shipsToPlace = [
         { type: 'porta-avioes', length: 6 },
         { type: 'navio-de-guerra', length: 4 },
@@ -13,7 +11,6 @@ export function randomizeOpponentShips(board) {
       // Resetar o tabuleiro antes de posicionar os navios
       board.resetBoard();
   
-      // Posicionar cada navio
       for (const ship of shipsToPlace) {
         let placed = false;
         let attempts = 0;
@@ -28,7 +25,6 @@ export function randomizeOpponentShips(board) {
           const direction = Math.random() < 0.5 ? 'horizontal' : 'vertical';
   
           try {
-            // Tentar adicionar o navio na posição gerada
             board.addShip({
               type: ship.type,
               row,
@@ -36,7 +32,6 @@ export function randomizeOpponentShips(board) {
               direction
             });
             
-            // Se chegou aqui, o navio foi posicionado com sucesso
             placed = true;
             console.log(`Navio ${ship.type} posicionado com sucesso em (${row}, ${column}), direção ${direction}`);
           } catch (error) {
@@ -60,8 +55,6 @@ export function randomizeOpponentShips(board) {
     }
   }
   
-  // Função para estratégias de posicionamento mais avançadas (variantes podem ser implementadas no futuro)
   export function placeShipsWithStrategy(board) {
-    // Por enquanto, usa o posicionamento aleatório
     return randomizeOpponentShips(board);
   }
