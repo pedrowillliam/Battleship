@@ -3,7 +3,6 @@ import { registerUser, loginUser } from "./controllers/user.js";
 import { createMatch, getAllMatches, getMatchById, updateMatchById, deleteMatchById } from "./controllers/match.js";
 import { getBoard, resetBoard, addShip, attack, getGameState, startGame } from "./controllers/board.js";
 import { fetchRanking } from "./controllers/ranking.js";
-import authMiddleware from "./middleware/auth.js";
 
 const router = new Router();
 
