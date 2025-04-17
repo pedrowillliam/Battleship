@@ -108,25 +108,33 @@ const attack = (req, res) => {
         // Array para armazenar os ataques do bot
         let botAttacks = [];
         let botContinueAttacking = true;
-        
-        // Bot continua atacando enquanto acertar e não tiver destruído o navio
-        while (botContinueAttacking) {
+
+        const MAX_BOT_ATTACKS = 100; // Limite para evitar loop infinito
+        let botAttackCount = 0;
+
+        // Bot continua atacando enquanto acertar
+        while (botContinueAttacking && botAttackCount < MAX_BOT_ATTACKS) {
             const [botRow, botCol] = smartBotAttack(playerBoard);
             const botResult = playerBoard.placeBomb(botRow, botCol);
-            
+
             botAttacks.push({
                 row: botRow,
                 column: botCol,
                 ...botResult
             });
-            
-            // Verifica se o bot deve continuar atacando (acertou, mas não destruiu)
-            botContinueAttacking = botResult.hit && !botResult.destroyed;
-            
+
+            // Agora o bot continua atacando enquanto acertar, independente de destruir
+            botContinueAttacking = botResult.hit;
+            botAttackCount++;
+
             console.log(`Bot atacou (${botRow}, ${botCol}): ${botResult.hit ? 'ACERTOU' : 'ERROU'}`);
             if (botResult.destroyed) {
                 console.log(`Bot DESTRUIU um ${botResult.shipType}!`);
             }
+        }
+
+        if (botAttackCount >= MAX_BOT_ATTACKS) {
+            console.warn("⚠️ Limite máximo de ataques do bot atingido! Possível loop evitado.");
         }
 
         res.status(200).json({
@@ -134,7 +142,7 @@ const attack = (req, res) => {
                 row, column,
                 ...playerResult
             },
-            botAttacks: botAttacks
+            botAttacks
         });
 
     } catch (error) {
@@ -145,6 +153,7 @@ const attack = (req, res) => {
         });
     }
 };
+
 
 const startGame = (_, res) => {
     try {
