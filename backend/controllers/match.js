@@ -2,7 +2,7 @@ import { insertMatch, selectAllMatches, selectMatchById, updateMatch, deleteMatc
 
 export const createMatch = async (req, res) => {
   try {
-    const userId = req.userId;
+    const userId = req.user.id;
     const { score, result, duration, total_hits, total_misses } = req.body;
 
     const match = await insertMatch(userId, score, result, duration, total_hits, total_misses);
